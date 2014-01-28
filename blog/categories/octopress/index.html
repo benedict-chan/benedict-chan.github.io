@@ -5,14 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Something</title>
+  <title>Category: Octopress - Something</title>
   <meta name="author" content="Benedict Chan">
 
   
-  <meta name="description" content="Software Install Git, GitHub for Windows
-Install Ruby Installer for Windows
-Install Ruby Development Kit
-, extract this to a folder like C:\ &hellip;">
+  <meta name="description" content="Category: octopress">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +18,7 @@ Install Ruby Development Kit
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://benedict-chan.github.io">
+  <link rel="canonical" href="http://benedict-chan.github.ioblog/categories/octopress">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Something" type="application/atom+xml">
@@ -78,142 +75,40 @@ Install Ruby Development Kit
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article role="article">
   
-  
-  
-    <article>
-      
   <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/">Setup Octopress With Github Pages in Windows</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T14:11:37+11:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
+    <h1 class="entry-title">Category: Octopress</h1>
     
   </header>
+  
+  <div id="blog-archives" class="category">
 
 
-  <div class="entry-content"><h2>Software</h2>
 
-<ol>
-<li>Install <a href="http://git-scm.com/">Git</a>, <a href="http://windows.github.com">GitHub for Windows</a></li>
-<li>Install <a href="http://rubyinstaller.org/downloads/">Ruby Installer for Windows</a></li>
-<li>Install <a href="https://github.com/oneclick/rubyinstaller/downloads/">Ruby Development Kit</a>
-, extract this to a folder like <code>C:\RubyDevKit</code></li>
-</ol>
+  
+  <h2>2014</h2>
 
+<article>
+  
+<h1><a href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/">Setup Octopress With Github Pages in Windows</a></h1>
+<time datetime="2014-01-28T14:11:37+11:00" pubdate><span class='month'>Jan</span> <span class='day'>28</span> <span class='year'>2014</span></time>
 
-<h2>Setup Ruby</h2>
-
-<pre><code>cd C:\RubyDevKit
-ruby dk.rb init
-ruby dk.rb install
-</code></pre>
-
-<h2>Setup Octopress</h2>
-
-<h4>Go to your source folder and clone Octopress</h4>
-
-<pre><code>git clone git://github.com/imathis/octopress.git username
-</code></pre>
-
-<h4>Install ruby&rsquo;s bundler</h4>
-
-<pre><code>cd username
-gem install bundler
-bundle install
-</code></pre>
-
-<h2>Setup Github repository and pages</h2>
-
-<p>Create a new repository named: <code>username.github.io</code> in github</p>
-
-<h4>Fix hellip in Windows</h4>
-
-<p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code></p>
-
-<figure class='code'><figcaption><span>Rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
-</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
-</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
+</footer>
 
 
-<p>You can then run</p>
+</article>
 
-<pre><code>rake setup_github_pages
-</code></pre>
-
-<p>This will ask your github repository url and add your repository as the default origin, you can check this after by</p>
-
-<pre><code>git remote -v
-</code></pre>
-
-<h4>Config the blog</h4>
-
-<p>Just head to the file <a href="http://octopress.org/docs/configuring/"><code>_config.ym</code></a></p>
-
-<h2>Create your site</h2>
-
-<pre><code>rake generate
-</code></pre>
-
-<h2>Preview it locally</h2>
-
-<pre><code>rake preview
-</code></pre>
-
-<p>It should now be shown in <a href="http://localhost:4000" target="_blank"><a href="http://localhost:4000">http://localhost:4000</a></a></p>
-
-<h2>Start a new Post</h2>
-
-<pre><code>rake new_post["New Post"]
-</code></pre>
-
-<h2>Deploy to github</h2>
-
-<pre><code>rake deploy
-</code></pre>
-
-<p>This will generate your copy and copied to <code>_deploy</code> folder.</p>
-
-<h2>Commit your source too</h2>
-
-<pre><code>git add .
-git commit -m 'your message'
-git push origin source
-</code></pre>
 </div>
-  
-  
 
-
-    </article>
   
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+</article>
+
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -230,7 +125,7 @@ git push origin source
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/benedict-chan">@benedict-chan</a> on GitHub
@@ -262,6 +157,7 @@ git push origin source
 
   
 </aside>
+
 
     </div>
   </div>

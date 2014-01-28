@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Something]]></title>
+  <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-01-28T17:37:24+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setup Octopress With Github Pages in Windows]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/"/>
+    <updated>2014-01-28T14:11:37+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows</id>
+    <content type="html"><![CDATA[<h2>Software</h2>
+
+<ol>
+<li>Install <a href="http://git-scm.com/">Git</a>, <a href="http://windows.github.com">GitHub for Windows</a></li>
+<li>Install <a href="http://rubyinstaller.org/downloads/">Ruby Installer for Windows</a></li>
+<li>Install <a href="https://github.com/oneclick/rubyinstaller/downloads/">Ruby Development Kit</a>
+, extract this to a folder like <code>C:\RubyDevKit</code></li>
+</ol>
+
+
+<h2>Setup Ruby</h2>
+
+<pre><code>cd C:\RubyDevKit
+ruby dk.rb init
+ruby dk.rb install
+</code></pre>
+
+<h2>Setup Octopress</h2>
+
+<h4>Go to your source folder and clone Octopress</h4>
+
+<pre><code>git clone git://github.com/imathis/octopress.git username
+</code></pre>
+
+<h4>Install ruby&rsquo;s bundler</h4>
+
+<pre><code>cd username
+gem install bundler
+bundle install
+</code></pre>
+
+<h2>Setup Github repository and pages</h2>
+
+<p>Create a new repository named: <code>username.github.io</code> in github</p>
+
+<h4>Fix hellip in Windows</h4>
+
+<p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code></p>
+
+<figure class='code'><figcaption><span>Rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
+</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
+</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can then run</p>
+
+<pre><code>rake setup_github_pages
+</code></pre>
+
+<p>This will ask your github repository url and add your repository as the default origin, you can check this after by</p>
+
+<pre><code>git remote -v
+</code></pre>
+
+<h4>Config the blog</h4>
+
+<p>Just head to the file <a href="http://octopress.org/docs/configuring/"><code>_config.ym</code></a></p>
+
+<h2>Create your site</h2>
+
+<pre><code>rake generate
+</code></pre>
+
+<h2>Preview it locally</h2>
+
+<pre><code>rake preview
+</code></pre>
+
+<p>It should now be shown in <a href="http://localhost:4000" target="_blank"><a href="http://localhost:4000">http://localhost:4000</a></a></p>
+
+<h2>Start a new Post</h2>
+
+<pre><code>rake new_post["New Post"]
+</code></pre>
+
+<h2>Deploy to github</h2>
+
+<pre><code>rake deploy
+</code></pre>
+
+<p>This will generate your copy and copied to <code>_deploy</code> folder.</p>
+
+<h2>Commit your source too</h2>
+
+<pre><code>git add .
+git commit -m 'your message'
+git push origin source
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>
