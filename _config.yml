@@ -7,7 +7,8 @@ title: Something
 subtitle: and something
 author: Benedict Chan
 simple_search: http://google.com/search
-description:
+description: Benedict Chan's thoughts, questions, and development notes
+keywords: "Benedict, Chan, Hong Kong, Sydney, Australia, .Net, C#, ASP.NET, MVC, Dependence Inject, TDD, SQL, Javascript, jQuery, Angularjs, CSS3, HTML5, bootstrap"
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in

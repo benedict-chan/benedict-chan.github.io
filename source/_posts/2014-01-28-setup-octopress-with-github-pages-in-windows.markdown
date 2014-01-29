@@ -2,8 +2,11 @@
 layout: post
 title: "Setup Octopress with Github pages in Windows"
 date: 2014-01-28 14:11:37 +1100
-comments: true
-categories: octopress
+comments: false
+categories: Octopress
+
+keywords: "Octopress, Windows, Github, Setup, Howto"
+description: "Setup Octopress with Github pages in Windows"
 ---
 
 ## Software ##
@@ -31,7 +34,7 @@ Create a new repository named: `username.github.io` in github
 
 #### Fix hellip in Windows ####
 In order to generate our first Octopress templates, we have to modify the `Rakefile`, just remove `&hellip;` 
-``` ruby Rakefile
+``` ruby Rakefile start:348 mark:349
     system "git init"
 	system "echo 'My Octopress Page is coming soon' > index.html"
 	system "git add ."
@@ -63,3 +66,7 @@ This will generate your copy and copied to `_deploy` folder.
 	git commit -m 'your message'
 	git push origin source
 
+## Reference ##
+- <a href="http://www.techelex.org/setup-octopress-on-windows7/" target="_blank">Setup Octopress on Windows7</a>
+- <a href="http://derantell.github.io/blog/2012/12/02/getting-started-with-octopress-on-windows/" target="_blank">Getting Started With Octopress on Windows</a>
+- <a href="http://octopress.org/docs/blogging/code/" target="_blank">Sharing Code Snippets</a>
