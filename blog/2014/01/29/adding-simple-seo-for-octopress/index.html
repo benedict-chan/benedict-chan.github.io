@@ -5,13 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Something</title>
+  <title>Adding simple SEO for octopress - Something</title>
   <meta name="author" content="Benedict Chan">
 
   
-  <meta name="description" content="Benedict Chan's thoughts, questions, and development notes">
+  <meta name="description" content="Adding simple SEO for octopress">
   
-  <meta name="keywords" content="Benedict, Chan, Hong Kong, Sydney, Australia, .Net, C#, ASP.NET, MVC, Dependence Inject, TDD, SQL, Javascript, jQuery, Angularjs, CSS3, HTML5, bootstrap" />
+  <meta name="keywords" content="Octopress, SEO, Meta Tag" />
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://benedict-chan.github.io">
+  <link rel="canonical" href="http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Something" type="application/atom+xml">
@@ -76,15 +76,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Adding Simple SEO for Octopress</a></h1>
+      <h1 class="entry-title">Adding Simple SEO for Octopress</h1>
     
     
       <p class="meta">
@@ -107,7 +104,7 @@
   </header>
 
 
-  <div class="entry-content"><h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
+<div class="entry-content"><h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
 
 <p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
 After a google search, seems it is quite easy to setup.</p>
@@ -181,22 +178,16 @@ After a google search, seems it is quite easy to setup.</p>
 </ul>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/">Setup Octopress With Github Pages in Windows</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Benedict Chan</span></span>
+
+      
 
 
 
@@ -208,124 +199,38 @@ After a google search, seems it is quite easy to setup.</p>
   
 
 
-<time datetime="2014-01-28T14:11:37+11:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
+<time datetime="2014-01-29T10:34:19+11:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress-seo/'>Octopress, SEO</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress/" data-via="" data-counturl="http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress/" >Tweet</a>
+  
+  
+  
+</div>
 
-
-  <div class="entry-content"><h2>Software</h2>
-
-<ol>
-<li>Install <a href="http://git-scm.com/">Git</a>, <a href="http://windows.github.com">GitHub for Windows</a></li>
-<li>Install <a href="http://rubyinstaller.org/downloads/">Ruby Installer for Windows</a></li>
-<li>Install <a href="https://github.com/oneclick/rubyinstaller/downloads/">Ruby Development Kit</a>
-, extract this to a folder like <code>C:\RubyDevKit</code></li>
-</ol>
-
-
-<h2>Setup Ruby</h2>
-
-<pre><code>cd C:\RubyDevKit
-ruby dk.rb init
-ruby dk.rb install
-</code></pre>
-
-<h2>Setup Octopress</h2>
-
-<h4>Go to your source folder and clone Octopress</h4>
-
-<pre><code>git clone git://github.com/imathis/octopress.git username
-</code></pre>
-
-<h4>Install ruby&rsquo;s bundler</h4>
-
-<pre><code>cd username
-gem install bundler
-bundle install
-</code></pre>
-
-<h2>Setup Github repository and pages</h2>
-
-<p>Create a new repository named: <code>username.github.io</code> in github</p>
-
-<h4>Fix hellip in Windows</h4>
-
-<p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code></p>
-
-<figure class='code'><figcaption>Rakefile</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='348' class='line-number'></div><div data-line='349' class='line-number marked start end'></div><div data-line='350' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
-</div><div class='line marked start end'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
-</div><div class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
-</div></pre></td></tr></table></div></figure>
-
-
-<p>You can then run</p>
-
-<pre><code>rake setup_github_pages
-</code></pre>
-
-<p>This will ask your github repository url and add your repository as the default origin, you can check this after by</p>
-
-<pre><code>git remote -v
-</code></pre>
-
-<h4>Config the blog</h4>
-
-<p>Just head to the file <a href="http://octopress.org/docs/configuring/"><code>_config.ym</code></a></p>
-
-<h2>Create your site</h2>
-
-<pre><code>rake generate
-</code></pre>
-
-<h2>Preview it locally</h2>
-
-<pre><code>rake preview
-</code></pre>
-
-<p>It should now be shown in <a href="http://localhost:4000" target="_blank"><a href="http://localhost:4000">http://localhost:4000</a></a></p>
-
-<h2>Start a new Post</h2>
-
-<pre><code>rake new_post["New Post"]
-</code></pre>
-
-<h2>Deploy to github</h2>
-
-<pre><code>rake deploy
-</code></pre>
-
-<p>This will generate your copy and copied to <code>_deploy</code> folder.</p>
-
-<h2>Commit your source too</h2>
-
-<pre><code>git add .
-git commit -m 'your message'
-git push origin source
-</code></pre>
-
-<h2>Reference</h2>
-
-<ul>
-<li><a href="http://www.techelex.org/setup-octopress-on-windows7/" target="_blank">Setup Octopress on Windows7</a></li>
-<li><a href="http://derantell.github.io/blog/2012/12/02/getting-started-with-octopress-on-windows/" target="_blank">Getting Started With Octopress on Windows</a></li>
-<li><a href="http://octopress.org/docs/blogging/code/" target="_blank">Sharing Code Snippets</a></li>
-</ul>
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/" title="Previous Post: Setup Octopress with Github pages in Windows">&laquo; Setup Octopress with Github pages in Windows</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -346,7 +251,7 @@ git push origin source
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/benedict-chan">@benedict-chan</a> on GitHub
@@ -378,6 +283,7 @@ git push origin source
 
   
 </aside>
+
 
     </div>
   </div>

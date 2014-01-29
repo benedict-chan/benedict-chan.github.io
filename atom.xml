@@ -4,7 +4,7 @@
   <title><![CDATA[Something]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-01-28T17:37:24+11:00</updated>
+  <updated>2014-01-29T17:41:47+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -14,7 +14,88 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Setup Octopress With Github Pages in Windows]]></title>
+    <title type="html"><![CDATA[Adding simple SEO for octopress]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress/"/>
+    <updated>2014-01-29T10:34:19+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress</id>
+    <content type="html"><![CDATA[<h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
+
+<p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
+After a google search, seems it is quite easy to setup.</p>
+
+<h2>The main Octopress Site</h2>
+
+<h5>Description</h5>
+
+<p>Meta tag <code>Description</code> is aleady in config file <code>_config.yml</code>. However, to show it in the main site. You have to modify the file <code>source/_includes/head.html</code>.</p>
+
+<figure class='code'><figcaption>source/_includes/head.html</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='10' class='line-number marked start'></div><div data-line='11' class='line-number marked end'></div><div data-line='12' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line marked start'><span class="o">-</span><span class="p">{</span><span class="o">%</span> <span class="n">capture</span> <span class="n">description</span> <span class="sx">%}&#x7b;&#x25; if page.description %}</span><span class="p">&#x7b;&#x7b;</span> <span class="n">page</span><span class="o">.</span><span class="n">description</span> <span class="p">}}{</span><span class="o">%</span> <span class="k">else</span> <span class="sx">%}&#x7b;&#x7b; content | raw_content }</span><span class="p">}{</span><span class="o">%</span> <span class="n">endif</span> <span class="sx">%}&#x7b;&#x25; endcapture %}</span>
+</div><div class='line marked end'><span class="o">+</span><span class="p">{</span><span class="o">%</span> <span class="n">capture</span> <span class="n">description</span> <span class="sx">%}&#x7b;&#x25; if page.description %}</span><span class="p">&#x7b;&#x7b;</span> <span class="n">page</span><span class="o">.</span><span class="n">description</span> <span class="p">}}{</span><span class="o">%</span> <span class="k">elsif</span> <span class="n">site</span><span class="o">.</span><span class="n">description</span> <span class="sx">%}&#x7b;&#x7b; site.description }</span><span class="p">}{</span><span class="o">%</span> <span class="k">else</span> <span class="sx">%}&#x7b;&#x7b; content | raw_content }</span><span class="p">}{</span><span class="o">%</span> <span class="n">endif</span> <span class="sx">%}&#x7b;&#x25; endcapture %}</span>
+</div><div class='line'><span class="o">&lt;</span><span class="n">meta</span> <span class="nb">name</span><span class="o">=</span><span class="s2">&quot;description&quot;</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&#x7b;&#x7b; description | strip_html | condense_spaces | truncate:150 }}&quot;</span><span class="o">&gt;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h5>Keywords</h5>
+
+<p>We have to add meta tag <code>keywords</code> is in config file <code>_config.yml</code> ourselves. We also need to modify the file <code>source/_includes/head.html</code> again for this change.</p>
+
+<figure class='code'><figcaption>_config.yml</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='10' class='line-number'></div><div data-line='11' class='line-number marked start end'></div></pre></td><td class='main  rb'><pre><div class='line'><span class="ss">description</span><span class="p">:</span> <span class="no">Site</span><span class="o">/</span><span class="no">Blog</span> <span class="n">description</span>
+</div><div class='line marked start end'><span class="o">+</span><span class="ss">keywords</span><span class="p">:</span> <span class="s2">&quot;siteKeywords&quot;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption>source/_includes/head.html</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='12' class='line-number marked start'></div><div data-line='13' class='line-number marked'></div><div data-line='14' class='line-number marked end'></div></pre></td><td class='main  rb'><pre><div class='line marked start'><span class="o">-</span><span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">keywords</span> <span class="sx">%}&lt;meta name=&quot;keywords&quot; content=&quot;&#x7b;&#x7b; page.keywords }</span><span class="p">}</span><span class="s2">&quot;&gt;&#x7b;&#x25; endif %}</span>
+</div><div class='line marked'><span class="s2">+&#x7b;&#x25; capture keywords %}&#x7b;&#x25; if page.keywords %}&#x7b;&#x7b; page.keywords }}&#x7b;&#x25; elsif site.keywords %}&#x7b;&#x7b; site.keywords }}&#x7b;&#x25; endif %}&#x7b;&#x25; endcapture %}</span>
+</div><div class='line marked end'><span class="s2">+&lt;meta name=&quot;</span><span class="n">keywords</span><span class="s2">&quot; content=&quot;</span><span class="p">&#x7b;&#x7b;</span> <span class="n">keywords</span> <span class="o">|</span> <span class="n">strip_html</span> <span class="o">|</span> <span class="n">condense_spaces</span> <span class="p">}}</span><span class="s2">&quot; /&gt;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>New Post</h2>
+
+<p>The default template for creating new post or pages doesn&rsquo;t provide you the meta tag <code>Description</code> and <code>keywords</code>. We can add it in the RakeFile.</p>
+
+<figure class='code'><figcaption>Rakefile</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='92' class='line-number'></div><div data-line='93' class='line-number'></div><div data-line='94' class='line-number'></div><div data-line='95' class='line-number'></div><div data-line='96' class='line-number'></div><div data-line='97' class='line-number'></div><div data-line='98' class='line-number'></div><div data-line='99' class='line-number'></div><div data-line='100' class='line-number'></div><div data-line='101' class='line-number'></div><div data-line='102' class='line-number'></div><div data-line='103' class='line-number'></div><div data-line='104' class='line-number'></div><div data-line='105' class='line-number'></div><div data-line='106' class='line-number'></div><div data-line='107' class='line-number'></div><div data-line='108' class='line-number'></div><div data-line='109' class='line-number'></div><div data-line='110' class='line-number'></div><div data-line='111' class='line-number'></div><div data-line='112' class='line-number'></div><div data-line='113' class='line-number'></div><div data-line='114' class='line-number marked start'></div><div data-line='115' class='line-number marked end'></div><div data-line='116' class='line-number'></div><div data-line='117' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line'><span class="c1"># usage rake new_post[my-new-post] or rake new_post[&#39;my new post&#39;] or rake new_post (defaults to &quot;new-post&quot;)</span>
+</div><div class='line'><span class="n">desc</span> <span class="s2">&quot;Begin a new post in </span><span class="si">#{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">posts_dir</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'><span class="n">task</span> <span class="ss">:new_post</span><span class="p">,</span> <span class="ss">:title</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">|</span>
+</div><div class='line'>  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span>
+</div><div class='line'>    <span class="n">title</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span>
+</div><div class='line'>  <span class="k">else</span>
+</div><div class='line'>    <span class="n">title</span> <span class="o">=</span> <span class="n">get_stdin</span><span class="p">(</span><span class="s2">&quot;Enter a title for your post: &quot;</span><span class="p">)</span>
+</div><div class='line'>  <span class="k">end</span>
+</div><div class='line'>  <span class="k">raise</span> <span class="s2">&quot;### You haven&#39;t set anything up yet. First run `rake install` to set up an Octopress theme.&quot;</span> <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">directory?</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+</div><div class='line'>  <span class="n">mkdir_p</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">posts_dir</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>  <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">posts_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-%d&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">title</span><span class="o">.</span><span class="n">to_url</span><span class="si">}</span><span class="s2">.</span><span class="si">#{</span><span class="n">new_post_ext</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</div><div class='line'>    <span class="nb">abort</span><span class="p">(</span><span class="s2">&quot;rake aborted!&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">ask</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> already exists. Do you want to overwrite?&quot;</span><span class="p">,</span> <span class="o">[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="o">]</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span>
+</div><div class='line'>  <span class="k">end</span>
+</div><div class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Creating new post: </span><span class="si">#{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>  <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;---&quot;</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;layout: post&quot;</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;title: </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">title</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/&amp;/</span><span class="p">,</span><span class="s1">&#39;&amp;amp;&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;date: </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-%d %H:%M:%S %z&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;comments: true&quot;</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;categories: &quot;</span>
+</div><div class='line marked start'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;description: &quot;</span>
+</div><div class='line marked end'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;keywords: &quot;</span>
+</div><div class='line'>    <span class="n">post</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;---&quot;</span>
+</div><div class='line'>  <span class="k">end</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>Reference</h2>
+
+<ul>
+<li><a href="http://xit0.org/2013/05/seo-for-octopress-websites/" target="_blank">SEO for Octopress Websites</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Setup Octopress with Github pages in Windows]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/"/>
     <updated>2014-01-28T14:11:37+11:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows</id>
@@ -57,13 +138,10 @@ bundle install
 
 <p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code></p>
 
-<figure class='code'><figcaption><span>Rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
-</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
-</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption>Rakefile</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='348' class='line-number'></div><div data-line='349' class='line-number marked start end'></div><div data-line='350' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
+</div><div class='line marked start end'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
+</div><div class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
+</div></pre></td></tr></table></div></figure>
 
 
 <p>You can then run</p>
@@ -110,6 +188,15 @@ bundle install
 git commit -m 'your message'
 git push origin source
 </code></pre>
+
+<h2>Reference</h2>
+
+<ul>
+<li><a href="http://www.techelex.org/setup-octopress-on-windows7/" target="_blank">Setup Octopress on Windows7</a></li>
+<li><a href="http://derantell.github.io/blog/2012/12/02/getting-started-with-octopress-on-windows/" target="_blank">Getting Started With Octopress on Windows</a></li>
+<li><a href="http://octopress.org/docs/blogging/code/" target="_blank">Sharing Code Snippets</a></li>
+</ul>
+
 ]]></content>
   </entry>
   

@@ -5,15 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Setup Octopress With Github Pages in Windows - Something</title>
+  <title>Setup Octopress with Github pages in Windows - Something</title>
   <meta name="author" content="Benedict Chan">
 
   
-  <meta name="description" content="Software Install Git, GitHub for Windows
-Install Ruby Installer for Windows
-Install Ruby Development Kit
-, extract this to a folder like C:\ &hellip;">
+  <meta name="description" content="Setup Octopress with Github pages in Windows">
   
+  <meta name="keywords" content="Octopress, Windows, Github, Setup, Howto" />
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -27,7 +25,7 @@ Install Ruby Development Kit
   <link href="/atom.xml" rel="alternate" title="Something" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -145,13 +143,10 @@ bundle install
 
 <p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code></p>
 
-<figure class='code'><figcaption><span>Rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
-</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
-</span><span class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption>Rakefile</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='348' class='line-number'></div><div data-line='349' class='line-number marked start end'></div><div data-line='350' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
+</div><div class='line marked start end'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
+</div><div class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
+</div></pre></td></tr></table></div></figure>
 
 
 <p>You can then run</p>
@@ -198,6 +193,15 @@ bundle install
 git commit -m 'your message'
 git push origin source
 </code></pre>
+
+<h2>Reference</h2>
+
+<ul>
+<li><a href="http://www.techelex.org/setup-octopress-on-windows7/" target="_blank">Setup Octopress on Windows7</a></li>
+<li><a href="http://derantell.github.io/blog/2012/12/02/getting-started-with-octopress-on-windows/" target="_blank">Getting Started With Octopress on Windows</a></li>
+<li><a href="http://octopress.org/docs/blogging/code/" target="_blank">Sharing Code Snippets</a></li>
+</ul>
+
 </div>
 
 
@@ -225,7 +229,7 @@ git push origin source
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+    <a class='category' href='/blog/categories/octopress/'>Octopress</a>
   
 </span>
 
@@ -244,6 +248,8 @@ git push origin source
     <p class="meta">
       
       
+        <a class="basic-alignment right" href="/blog/2014/01/29/adding-simple-seo-for-octopress/" title="Next Post: Adding simple SEO for octopress">Adding simple SEO for octopress &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -255,6 +261,10 @@ git push origin source
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Adding Simple SEO for Octopress</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/">Setup Octopress With Github Pages in Windows</a>

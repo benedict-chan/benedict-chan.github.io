@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | Something]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-01-28T17:37:24+11:00</updated>
+  <updated>2014-01-29T17:41:47+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Setup Octopress With Github Pages in Windows]]></title>
+    <title type="html"><![CDATA[Setup Octopress with Github pages in Windows]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/"/>
     <updated>2014-01-28T14:11:37+11:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows</id>
@@ -56,14 +56,11 @@ bundle install
 <h4>Fix hellip in Windows</h4>
 
 <p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code>
-``` ruby Rakefile</p>
-
-<pre><code>system "git init"
+<code>rb Rakefile start:348 mark:349
+system "git init"
 system "echo 'My Octopress Page is coming soon' &gt; index.html"
 system "git add ."
-</code></pre>
-
-<p>```
+</code>
 You can then run</p>
 
 <pre><code>rake setup_github_pages
@@ -108,6 +105,15 @@ You can then run</p>
 git commit -m 'your message'
 git push origin source
 </code></pre>
+
+<h2>Reference</h2>
+
+<ul>
+<li><a href="http://www.techelex.org/setup-octopress-on-windows7/" target="_blank">Setup Octopress on Windows7</a></li>
+<li><a href="http://derantell.github.io/blog/2012/12/02/getting-started-with-octopress-on-windows/" target="_blank">Getting Started With Octopress on Windows</a></li>
+<li><a href="http://octopress.org/docs/blogging/code/" target="_blank">Sharing Code Snippets</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
