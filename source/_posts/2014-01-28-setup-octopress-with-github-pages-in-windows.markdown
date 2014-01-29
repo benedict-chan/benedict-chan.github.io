@@ -34,10 +34,10 @@ Create a new repository named: `username.github.io` in github
 
 #### Fix hellip in Windows ####
 In order to generate our first Octopress templates, we have to modify the `Rakefile`, just remove `&hellip;` 
-``` ruby Rakefile start:348 mark:349
-    system "git init"
-	system "echo 'My Octopress Page is coming soon' > index.html"
-	system "git add ."
+``` rb Rakefile start:348 mark:349
+system "git init"
+system "echo 'My Octopress Page is coming soon' > index.html"
+system "git add ."
 ```
 You can then run
 	rake setup_github_pages
