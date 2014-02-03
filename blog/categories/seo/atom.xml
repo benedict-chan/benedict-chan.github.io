@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Octopress, SEO | Something]]></title>
-  <link href="http://benedict-chan.github.io/blog/categories/octopress-seo/atom.xml" rel="self"/>
+  <title><![CDATA[Category: SEO | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/seo/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-01-29T17:41:47+11:00</updated>
+  <updated>2014-02-03T17:07:24+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
