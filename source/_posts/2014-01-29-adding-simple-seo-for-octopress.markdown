@@ -3,7 +3,7 @@ layout: post
 title: "Adding simple SEO for octopress"
 date: 2014-01-29 10:34:19 +1100
 comments: false
-categories: ["Octopress, SEO"]
+categories: ["Octopress", "SEO"]
 keywords: "Octopress, SEO, Meta Tag"
 description: "Adding simple SEO for octopress"
 ---
