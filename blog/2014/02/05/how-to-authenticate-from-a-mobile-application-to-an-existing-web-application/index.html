@@ -5,13 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Setup Octopress with Github pages in Windows - Benedict Chan</title>
+  <title>How to authenticate from a mobile application to an existing web application - Benedict Chan</title>
   <meta name="author" content="Benedict Chan">
 
    
-  <meta name="description" content="Setup Octopress with Github pages in Windows">
+  <meta name="description" content="Benedict Chan's thoughts, questions, and development notes">
   
-  <meta name="keywords" content="Octopress, Windows, Github, Setup, Howto">
+  <meta name="keywords" content="mobile, authentication">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows">
+  <link rel="canonical" href="http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application">
   <link href="/favicon.png" rel="icon">
   <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
@@ -89,7 +89,7 @@
 
   <header>
   <div class="jumbotron">
-    Setup Octopress With Github Pages in Windows
+    How to Authenticate From a Mobile Application to an Existing Web Application
 	<h5>
 
 
@@ -102,112 +102,59 @@
   
 
 
-<i class="icon-calendar-empty"></i> <time datetime="2014-01-28T14:11:37+11:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time></h5>
+<i class="icon-calendar-empty"></i> <time datetime="2014-02-05T16:35:51+11:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time></h5>
   </div>
 </header>
   <div class="row-fluid">
     <div class="span12">
-      <h2>Software</h2>
+      <h2>The problem</h2>
+
+<p>The experience for a user authenticating to a web site vs a mobile application is totally different.</p>
+
+<h3>The web experience</h3>
 
 <ol>
-<li>Install <a href="http://git-scm.com/">Git</a>, <a href="http://windows.github.com">GitHub for Windows</a></li>
-<li>Install <a href="http://rubyinstaller.org/downloads/">Ruby Installer for Windows</a></li>
-<li>Install <a href="https://github.com/oneclick/rubyinstaller/downloads/">Ruby Development Kit</a>
-, extract this to a folder like <code>C:\RubyDevKit</code></li>
+<li>User comes to a web site</li>
+<li>User got redirected to the Login Page if needed</li>
+<li>User login by using their UserId,Password (cookie is created)</li>
+<li>User logout or leave the browser (cookie may expire)</li>
+<li>User come to the web applicaton next time, may need to login again (if cookie expired)</li>
 </ol>
 
 
-<h2>Setup Ruby</h2>
+<h3>The mobile app experience</h3>
 
-<pre><code>cd C:\RubyDevKit
-ruby dk.rb init
-ruby dk.rb install
-</code></pre>
+<ol>
+<li>User open the app for the first time, asked login with their UserId,Password</li>
+<li>After that, in most cases, user access to the app assuming they are always logged in and never need to logout or login again.</li>
+</ol>
 
-<h2>Setup Octopress</h2>
 
-<h4>Go to your source folder and clone Octopress</h4>
-
-<pre><code>git clone git://github.com/imathis/octopress.git username
-</code></pre>
+<h2>The solution</h2>
 
 <!-- more -->
 
 
-<h4>Install ruby&rsquo;s bundler</h4>
+<h3>Create an API for the mobile to authenticate an user</h3>
 
-<pre><code>cd username
-gem install bundler
-bundle install
-</code></pre>
+<p>An API call is needed for the mobile app to authenticate an user by UserId/password.
+For security reason, it should connect via a SSL secure connection.</p>
 
-<h2>Setup Github repository and pages</h2>
+<h3>Issue a token to the mobile from the API when the user logins successfully</h3>
 
-<p>Create a new repository named: <code>username.github.io</code> in github</p>
+<p>For security reason, we should never save a user password in the mobile app, therefore, what we do is to issue a token which acts like a never expired cookie as in a web application.</p>
 
-<h4>Fix hellip in Windows</h4>
+<h4>About the token</h4>
 
-<p>In order to generate our first Octopress templates, we have to modify the <code>Rakefile</code>, just remove <code>&amp;hellip;</code></p>
+<p>When creating this authentication token, we should remember that a user may have more than one device installing our mobile application.
+Therefore
+1. The relationship for a user to a token is not a one-to-one but one-to-many relationship.
+2. The token should have a corresponding timestamp when created because in case a user changed their password, all token issued before this password changing time should be expired</p>
 
-<figure class='code'><figcaption>Rakefile</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='348' class='line-number'></div><div data-line='349' class='line-number marked start end'></div><div data-line='350' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line'><span class="nb">system</span> <span class="s2">&quot;git init&quot;</span>
-</div><div class='line marked start end'><span class="nb">system</span> <span class="s2">&quot;echo &#39;My Octopress Page is coming soon&#39; &gt; index.html&quot;</span>
-</div><div class='line'><span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
-</div></pre></td></tr></table></div></figure>
+<h3>Calling other Web Application&rsquo;s API</h3>
 
-
-<p>You can then run</p>
-
-<pre><code>rake setup_github_pages
-</code></pre>
-
-<p>This will ask your github repository url and add your repository as the default origin, you can check this after by</p>
-
-<pre><code>git remote -v
-</code></pre>
-
-<h4>Config the blog</h4>
-
-<p>Just head to the file <a href="http://octopress.org/docs/configuring/"><code>_config.ym</code></a></p>
-
-<h2>Create your site</h2>
-
-<pre><code>rake generate
-</code></pre>
-
-<h2>Preview it locally</h2>
-
-<pre><code>rake preview
-</code></pre>
-
-<p>It should now be shown in <a href="http://localhost:4000" target="_blank"><a href="http://localhost:4000">http://localhost:4000</a></a></p>
-
-<h2>Start a new Post</h2>
-
-<pre><code>rake new_post["New Post"]
-</code></pre>
-
-<h2>Deploy to github</h2>
-
-<pre><code>rake deploy
-</code></pre>
-
-<p>This will generate your copy and copied to <code>_deploy</code> folder.</p>
-
-<h2>Commit your source too</h2>
-
-<pre><code>git add .
-git commit -m 'your message'
-git push origin source
-</code></pre>
-
-<h2>Reference</h2>
-
-<ul>
-<li><a href="http://www.techelex.org/setup-octopress-on-windows7/" target="_blank">Setup Octopress on Windows7</a></li>
-<li><a href="http://derantell.github.io/blog/2012/12/02/getting-started-with-octopress-on-windows/" target="_blank">Getting Started With Octopress on Windows</a></li>
-<li><a href="http://octopress.org/docs/blogging/code/" target="_blank">Sharing Code Snippets</a></li>
-</ul>
-
+<p>Your mobile application should now use this token to call your server-side APIs. Your server-side should validate this token as a similair way as how to validates a login cookie.
+One way to pass this token, is to send it throught HTTP headers instead of a URL query parameters.</p>
 
     </div>
   </div>
@@ -226,7 +173,9 @@ git push origin source
 
 
 
-  <a href="/blog/categories/octopress/"><span class="badge">Octopress</span></a>
+  <a href="/blog/categories/authentication/"><span class="badge">authentication</span></a>
+
+  <a href="/blog/categories/mobile/"><span class="badge">mobile</span></a>
 
 
 
@@ -256,8 +205,8 @@ git push origin source
       <div class="span12">
         <p class="meta">
           
+            <a class="basic-alignment left" href="/blog/2014/01/29/adding-simple-seo-for-octopress/" title="Previous Post: Adding simple SEO for octopress">&laquo; Adding simple SEO for octopress</a>
           
-            <a class="basic-alignment right" href="/blog/2014/01/29/adding-simple-seo-for-octopress/" title="Next Post: Adding simple SEO for octopress">Adding simple SEO for octopress &raquo;</a>
           
         </p>
       </div>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mobile | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/mobile/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-02-06T10:51:49+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to authenticate from a mobile application to an existing web application]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/"/>
+    <updated>2014-02-05T16:35:51+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application</id>
+    <content type="html"><![CDATA[<h2>The problem</h2>
+
+<p>The experience for a user authenticating to a web site vs a mobile application is totally different.</p>
+
+<h3>The web experience</h3>
+
+<ol>
+<li>User comes to a web site</li>
+<li>User got redirected to the Login Page if needed</li>
+<li>User login by using their UserId,Password (cookie is created)</li>
+<li>User logout or leave the browser (cookie may expire)</li>
+<li>User come to the web applicaton next time, may need to login again (if cookie expired)</li>
+</ol>
+
+
+<h3>The mobile app experience</h3>
+
+<ol>
+<li>User open the app for the first time, asked login with their UserId,Password</li>
+<li>After that, in most cases, user access to the app assuming they are always logged in and never need to logout or login again.</li>
+</ol>
+
+
+<h2>The solution</h2>
+
+<!-- more -->
+
+
+<h3>Create an API for the mobile to authenticate an user</h3>
+
+<p>An API call is needed for the mobile app to authenticate an user by UserId/password.
+For security reason, it should connect via a SSL secure connection.</p>
+
+<h3>Issue a token to the mobile from the API when the user logins successfully</h3>
+
+<p>For security reason, we should never save a user password in the mobile app, therefore, what we do is to issue a token which acts like a never expired cookie as in a web application.</p>
+
+<h4>About the token</h4>
+
+<p>When creating this authentication token, we should remember that a user may have more than one device installing our mobile application.
+Therefore
+1. The relationship for a user to a token is not a one-to-one but one-to-many relationship.
+2. The token should have a corresponding timestamp when created because in case a user changed their password, all token issued before this password changing time should be expired</p>
+
+<h3>Calling other Web Application&rsquo;s API</h3>
+
+<p>Your mobile application should now use this token to call your server-side APIs. Your server-side should validate this token as a similair way as how to validates a login cookie.
+One way to pass this token, is to send it throught HTTP headers instead of a URL query parameters.</p>
+]]></content>
+  </entry>
+  
+</feed>

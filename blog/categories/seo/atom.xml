@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SEO | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/seo/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-02-03T17:07:24+11:00</updated>
+  <updated>2014-02-06T10:51:49+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -35,6 +35,9 @@ After a google search, seems it is quite easy to setup.</p>
 &lt;meta name="description" content="{{ description | strip_html | condense_spaces | truncate:150 }}"&gt;
 </code>
 </p>
+
+<!-- more -->
+
 
 <h5>Keywords</h5>
 
