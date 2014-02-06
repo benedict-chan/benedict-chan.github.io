@@ -24,6 +24,8 @@ description: "Setup Octopress with Github pages in Windows"
 #### Go to your source folder and clone Octopress ####
 	git clone git://github.com/imathis/octopress.git username
 
+<!-- more -->
+	
 #### Install ruby's bundler ####
 	cd username
 	gem install bundler

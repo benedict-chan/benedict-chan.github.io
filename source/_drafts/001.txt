@@ -1,26 +1,5 @@
----
-layout: post
-title: "Supporting mobile app authentication in existing ASP.NET MVC"
-date: 2014-02-05 16:35:51 +1100
-comments: true
-categories: ["apps", "authentication"]
-description: 
-keywords: "apps, authentication, mobile"
----
 
 
-## The web experience ##
-1. User comes to our web application
-2. Redirect to the Login Page if needed
-3. User login by using their UserId,Password (cookie is created)
-4. User logout or leave the browser(cookie may expire) 
-5. User come to our web applicaton next time, login again if cookie expired
-
-## The mobile app experience ##
-1. User open the app for the first time, asked login with their UserId,Password
-2. User access to the app assuming they are always logged in and never logout
-
-<!-- more -->
 
 ## What we have ##
 First, let have a look in an existing ASP.NET MVC application with authentication, it should probably have the following implemented

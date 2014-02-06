@@ -22,6 +22,9 @@ Meta tag `Description` is aleady in config file `_config.yml`. However, to show 
 <meta name="description" content="{{ description | strip_html | condense_spaces | truncate:150 }}">
 ```
 {% endraw %}
+
+<!-- more -->
+
 ##### Keywords #####
 We have to add meta tag `keywords` is in config file `_config.yml` ourselves. We also need to modify the file `source/_includes/head.html` again for this change.
 {% raw %}
