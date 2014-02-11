@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: unit test | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/unit-test/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-02-11T14:51:23+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Simple Authentication API for mobile application using ASP.NET MVC]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/"/>
+    <updated>2014-02-06T17:22:34+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc</id>
+    <content type="html"><![CDATA[<p>This is actually part of server-side implementaion for the previous post: <a href="/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">How to authenticate from a mobile application to an existing web pplication</a>
+We are going to create an ASP.NET MVC action as a JSON API to authenticate a mobile client.</p>
+
+<h2>The Token Interface</h2>
+
+<p>First, let&rsquo;s create a token service interface for our API Controller. We will be using dependency injection pattern.
+
+``` cs IAuthTokenService.cs</p>
+
+<pre><code>public interface IAuthTokenService
+{
+    /// &lt;summary&gt;
+    /// Issue a token for a user
+    /// &lt;/summary&gt;
+    /// &lt;param name="username"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;tokenId&lt;/returns&gt;
+    string IssuseToken(string username);
+
+    /// &lt;summary&gt;
+    /// Check if a token is valid
+    /// &lt;/summary&gt;
+    /// &lt;param name="username"&gt;&lt;/param&gt;
+    /// &lt;param name="tokenId"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    bool IsTokenValid(string username, string tokenId);
+
+    /// &lt;summary&gt;
+    /// Expire users' tokens (designed to be called when user changed their password)
+    /// &lt;/summary&gt;
+    /// &lt;param name="username"&gt;&lt;/param&gt;
+    /// &lt;param name="tokensCreatedBefore"&gt;expire all tokens created before this time&lt;/param&gt;
+    void ExpireUserTokens(string username, DateTime? tokensCreatedBefore);
+}
+</code></pre>
+
+<p>```
+</p>
+
+<!-- more -->
+
+
+<h2>The API Controller</h2>
+
+<p>Our API controller can now use the token authentication service as simple as
+
+``` cs SimpleApiController.cs</p>
+
+<pre><code>public class SimpleApiController : Controller
+{
+    private readonly IMembershipService _membershipService;
+    private readonly IAuthTokenService _tokenService;
+
+    public SimpleApiController(IMembershipService membershipService, IAuthTokenService tokenService)
+    {
+        this._membershipService = membershipService;
+        this._tokenService = tokenService;
+    }
+
+    [HttpPost]
+    public JsonResult MobileAuthenticate(string email, string password)
+    {
+        bool valid = this._membershipService.ValidateUser(email, password);
+
+        var result = new AuthTokenResult() {Success = false};
+
+        if (valid)
+        {
+            var token = this._tokenService.IssuseToken(email);
+            result.Success = true;
+            result.TokenId = token;
+        }
+
+        return Json(result);
+    }
+}
+</code></pre>
+
+<p>```
+</p>
+
+<h2>Unit Test</h2>
+
+<p>Now that we have our interface, and we have our controller.
+Let&rsquo;s create an unit test first, yes, we don&rsquo;t actually need to implement our interface when we write our test.
+We can actually assign someone to help us to implement the interface later.</p>
+
+<p>Alright, below is one of our test. We will use <a target="_blank" href="https://github.com/Moq/moq4">Moq</a> to help us mock our interface.
+
+``` cs SimpleApiControllerTest.cs</p>
+
+<pre><code>[TestClass()]
+public class SimpleApiControllerTest
+{
+    private readonly IMembershipService _membershipService;
+    private readonly IAuthTokenService _tokenService;
+
+    [TestMethod()]
+    public void MobileAuthenticateSuccess()
+    {
+        var tokenId = "dummyToken";
+        var email = "some@email.com";
+        var password = "abcdef";
+
+        var memberMock = new Mock&lt;IMembershipService&gt;();
+        memberMock.Setup(m =&gt; m.ValidateUser(It.IsAny&lt;string&gt;(), It.IsAny&lt;string&gt;())).Returns(true);
+
+        var tokenMock = new Mock&lt;IAuthTokenService&gt;();
+        tokenMock.Setup(t =&gt; t.IssuseToken(It.IsAny&lt;string&gt;())).Returns(tokenId);
+
+        var controller = new SimpleApiController(memberMock.Object, tokenMock.Object);
+        var result = controller.MobileAuthenticate(email, password);
+
+        var authResult = ((JsonResult)result).Data as AuthTokenResult;
+
+        Assert.AreEqual(true, authResult.Success);
+        Assert.AreEqual(tokenId, authResult.TokenId);
+    }
+}
+</code></pre>
+
+<p>```
+</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-02-06T10:51:49+11:00</updated>
+  <updated>2014-02-11T14:51:23+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,188 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ASP.NET MVC how to handle unauthorized response in JSON for your API]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api/"/>
+    <updated>2014-02-11T13:16:43+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api</id>
+    <content type="html"><![CDATA[<p>Assuming you want to prepare some JSON API in your ASP.NET MVC with authorization.</p>
+
+<p>To share the same authorization logics for our Controller Action, what we should probably do is to implement our own FilterAttributes.</p>
+
+<p>It can be as simple as:</p>
+
+<figure class='code'><figcaption>ApiAuthorizeAttribute.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div><div data-line='25' class='line-number'></div><div data-line='26' class='line-number'></div><div data-line='27' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">ApiAuthorizeAttribute</span> <span class="p">:</span> <span class="n">ActionFilterAttribute</span><span class="p">,</span> <span class="n">IAuthorizationFilter</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="c1">//Property Inject here!</span>
+</div><div class='line'>        <span class="k">public</span> <span class="n">IAuthTokenService</span> <span class="n">AuthTokenService</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">public</span> <span class="nf">ApiAuthorizeAttribute</span><span class="p">()</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>        <span class="cp">#region IAuthorizationFilter member</span>
+</div><div class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">OnActionExecuting</span><span class="p">(</span><span class="n">ActionExecutingContext</span> <span class="n">filterContext</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="kt">bool</span> <span class="n">authTokenValid</span> <span class="p">=</span> <span class="n">IsRequestTokenValid</span><span class="p">(</span><span class="n">filterContext</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="k">if</span> <span class="p">(!</span><span class="n">authTokenValid</span><span class="p">)</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="n">filterContext</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JsonResult</span>
+</div><div class='line'>                <span class="p">{</span>
+</div><div class='line'>                    <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Success</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="s">&quot;Unauthorized&quot;</span> <span class="p">},</span>
+</div><div class='line'>                    <span class="n">ContentEncoding</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">,</span>
+</div><div class='line'>                    <span class="n">ContentType</span> <span class="p">=</span> <span class="s">&quot;application/json&quot;</span><span class="p">,</span>
+</div><div class='line'>                    <span class="n">JsonRequestBehavior</span> <span class="p">=</span> <span class="n">JsonRequestBehavior</span><span class="p">.</span><span class="n">AllowGet</span>
+</div><div class='line'>                <span class="p">};</span>
+</div><div class='line'>            <span class="p">}</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Note we are using property injection here for the <code>IAuthTokenService</code> here, check out <a href="https://code.google.com/p/autofac/wiki/MvcIntegration#Inject_Properties_Into_FilterAttributes" target="_blank" >Inject Properties Into FilterAttributes</a> for more information.</p>
+
+<h2>HTTP status codes</h2>
+
+<p>In order to add our HTTP status codes, we can simple add the following line:</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption>ApiAuthorizeAttribute.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number marked start end'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line marked start end'>                <span class="n">filterContext</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span> <span class="p">=</span> <span class="m">401</span><span class="p">;</span>
+</div><div class='line'>                <span class="n">filterContext</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JsonResult</span>
+</div><div class='line'>                <span class="p">{</span>
+</div><div class='line'>                    <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Success</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="s">&quot;Unauthorized&quot;</span> <span class="p">},</span>
+</div><div class='line'>                    <span class="n">ContentEncoding</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">,</span>
+</div><div class='line'>                    <span class="n">ContentType</span> <span class="p">=</span> <span class="s">&quot;application/json&quot;</span><span class="p">,</span>
+</div><div class='line'>                    <span class="n">JsonRequestBehavior</span> <span class="p">=</span> <span class="n">JsonRequestBehavior</span><span class="p">.</span><span class="n">AllowGet</span>
+</div><div class='line'>                <span class="p">};</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>Problem: The default ASP.NET forms authentication redirect behaviour</h2>
+
+<p>The default ASP.NET forms authentication behaviour will convert HTTP 401 status codes to 302 in order to redirect to the login page.
+This probably not we want here as we are expecting a JSON for our API result.</p>
+
+<h2>Solution</h2>
+
+<p>If you are using .Net 4.5, you can apply the new <a href="http://msdn.microsoft.com/en-us/library/system.web.httpresponse.suppressformsauthenticationredirect(v=vs.110).aspx" target="_blank">HttpResponse.SuppressFormsAuthenticationRedirect</a> property.</p>
+
+<p>If you are using .Net 4.0 or lower version, it seems it cannot be done at the moment, but we may try to use different HTTP status code like <a href="http://en.wikipedia.org/wiki/HTTP_403" target="_blank">403</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Simple Authentication API for mobile application using ASP.NET MVC]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/"/>
+    <updated>2014-02-06T17:22:34+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc</id>
+    <content type="html"><![CDATA[<p>This is actually part of server-side implementaion for the previous post: <a href="http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">How to authenticate from a mobile application to an existing web pplication</a>
+We are going to create an ASP.NET MVC action as a JSON API to authenticate a mobile client.</p>
+
+<h2>The Token Interface</h2>
+
+<p>First, let&rsquo;s create a token service interface for our API Controller. We will be using dependency injection pattern.</p>
+
+<figure class='code'><figcaption>IAuthTokenService.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">interface</span> <span class="n">IAuthTokenService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="c1">/// &lt;summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// Issue a token for a user</span>
+</div><div class='line'>        <span class="c1">/// &lt;/summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;username&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;returns&gt;tokenId&lt;/returns&gt;</span>
+</div><div class='line'>        <span class="kt">string</span> <span class="nf">IssuseToken</span><span class="p">(</span><span class="kt">string</span> <span class="n">username</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>        <span class="c1">/// &lt;summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// Check if a token is valid</span>
+</div><div class='line'>        <span class="c1">/// &lt;/summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;username&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;tokenId&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;returns&gt;&lt;/returns&gt;</span>
+</div><div class='line'>        <span class="kt">bool</span> <span class="nf">IsTokenValid</span><span class="p">(</span><span class="kt">string</span> <span class="n">username</span><span class="p">,</span> <span class="kt">string</span> <span class="n">tokenId</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>        <span class="c1">/// &lt;summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// Expire users&#39; tokens (designed to be called when user changed their password)</span>
+</div><div class='line'>        <span class="c1">/// &lt;/summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;username&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;tokensCreatedBefore&quot;&gt;expire all tokens created before this time&lt;/param&gt;</span>
+</div><div class='line'>        <span class="k">void</span> <span class="nf">ExpireUserTokens</span><span class="p">(</span><span class="kt">string</span> <span class="n">username</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">tokensCreatedBefore</span><span class="p">);</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<h2>The API Controller</h2>
+
+<p>Our API controller can now use the token authentication service as simple as</p>
+
+<figure class='code'><figcaption>SimpleApiController.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div><div data-line='25' class='line-number'></div><div data-line='26' class='line-number'></div><div data-line='27' class='line-number'></div><div data-line='28' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">SimpleApiController</span> <span class="p">:</span> <span class="n">Controller</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IMembershipService</span> <span class="n">_membershipService</span><span class="p">;</span>
+</div><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IAuthTokenService</span> <span class="n">_tokenService</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">public</span> <span class="nf">SimpleApiController</span><span class="p">(</span><span class="n">IMembershipService</span> <span class="n">membershipService</span><span class="p">,</span> <span class="n">IAuthTokenService</span> <span class="n">tokenService</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_membershipService</span> <span class="p">=</span> <span class="n">membershipService</span><span class="p">;</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_tokenService</span> <span class="p">=</span> <span class="n">tokenService</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'><span class="na">   </span>
+</div><div class='line'><span class="na">        [HttpPost]</span>
+</div><div class='line'>        <span class="k">public</span> <span class="n">JsonResult</span> <span class="nf">MobileAuthenticate</span><span class="p">(</span><span class="kt">string</span> <span class="n">email</span><span class="p">,</span> <span class="kt">string</span> <span class="n">password</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="kt">bool</span> <span class="n">valid</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_membershipService</span><span class="p">.</span><span class="n">ValidateUser</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AuthTokenResult</span><span class="p">()</span> <span class="p">{</span><span class="n">Success</span> <span class="p">=</span> <span class="k">false</span><span class="p">};</span>
+</div><div class='line'> </div><div class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="kt">var</span> <span class="n">token</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_tokenService</span><span class="p">.</span><span class="n">IssuseToken</span><span class="p">(</span><span class="n">email</span><span class="p">);</span>
+</div><div class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">Success</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</div><div class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">TokenId</span> <span class="p">=</span> <span class="n">token</span><span class="p">;</span>
+</div><div class='line'>            <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>            <span class="k">return</span> <span class="nf">Json</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>Unit Test</h2>
+
+<p>Now that we have our interface, and we have our controller.
+Let&rsquo;s create an unit test first, yes, we don&rsquo;t actually need to implement our interface when we write our test.
+We can actually assign someone to help us to implement the interface later.</p>
+
+<p>Alright, below is one of our test. We will use <a target="_blank" href="https://github.com/Moq/moq4">Moq</a> to help us mock our interface.</p>
+
+<figure class='code'><figcaption>SimpleApiControllerTest.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div><div data-line='25' class='line-number'></div><div data-line='26' class='line-number'></div><div data-line='27' class='line-number'></div><div data-line='28' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'><span class="na">    [TestClass()]</span>
+</div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">SimpleApiControllerTest</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IMembershipService</span> <span class="n">_membershipService</span><span class="p">;</span>
+</div><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IAuthTokenService</span> <span class="n">_tokenService</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'><span class="na">        [TestMethod()]</span>
+</div><div class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">MobileAuthenticateSuccess</span><span class="p">()</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">tokenId</span> <span class="p">=</span> <span class="s">&quot;dummyToken&quot;</span><span class="p">;</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">email</span> <span class="p">=</span> <span class="s">&quot;some@email.com&quot;</span><span class="p">;</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">password</span> <span class="p">=</span> <span class="s">&quot;abcdef&quot;</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">memberMock</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">IMembershipService</span><span class="p">&gt;();</span>
+</div><div class='line'>            <span class="n">memberMock</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">ValidateUser</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(),</span> <span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;())).</span><span class="n">Returns</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">tokenMock</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">IAuthTokenService</span><span class="p">&gt;();</span>
+</div><div class='line'>            <span class="n">tokenMock</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="n">t</span><span class="p">.</span><span class="n">IssuseToken</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;())).</span><span class="n">Returns</span><span class="p">(</span><span class="n">tokenId</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SimpleApiController</span><span class="p">(</span><span class="n">memberMock</span><span class="p">.</span><span class="n">Object</span><span class="p">,</span> <span class="n">tokenMock</span><span class="p">.</span><span class="n">Object</span><span class="p">);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">MobileAuthenticate</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">authResult</span> <span class="p">=</span> <span class="p">((</span><span class="n">JsonResult</span><span class="p">)</span><span class="n">result</span><span class="p">).</span><span class="n">Data</span> <span class="k">as</span> <span class="n">AuthTokenResult</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'>            <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="n">authResult</span><span class="p">.</span><span class="n">Success</span><span class="p">);</span>
+</div><div class='line'>            <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="n">tokenId</span><span class="p">,</span> <span class="n">authResult</span><span class="p">.</span><span class="n">TokenId</span><span class="p">);</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to authenticate from a mobile application to an existing web application]]></title>
