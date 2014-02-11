@@ -4,7 +4,7 @@ title: "How to authenticate from a mobile application to an existing web applica
 date: 2014-02-05 16:35:51 +1100
 comments: true
 categories: ["mobile", "authentication"]
-description: 
+description: how to do authentication from a mobile application to an existing web application
 keywords: "mobile, authentication"
 ---
 
