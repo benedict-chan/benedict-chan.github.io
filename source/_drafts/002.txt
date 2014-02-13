@@ -1,0 +1,63 @@
+
+
+#Creating custom Filter Attribute in Orchard#
+
+When working in Orchard, it's always a good idea to look at the current codebase as an example.
+The one I chose as a reference in creating my custom filter attribute is the `Theme` attribute.
+They are located in `$\Orchard\Themes\ThemeFilter.cs` and `$\Orchard\Themes\ThemedAttribute.cs`.
+
+
+
+
+## What we have ##
+First, let have a look in an existing ASP.NET MVC application with authentication, it should probably have the following implemented
+1. An Account Controller dependent on an Authentication/Membership Service(s)
+2. Sign in an user by adding <a href="http://msdn.microsoft.com/en-us/library/system.web.security.formsauthenticationticket(v=vs.110).aspx" target="_blank">FormsAuthenticationTicket</a> to browser cookie
+3. An <a href"http://msdn.microsoft.com/en-us/library/system.web.mvc.iauthorizationfilter(v=vs.118).aspx" target="_blank">IAuthorizationFilter</a> to protect access to your Controller or Action
+
+## The solution ##
+1. Create an Web API for mobile apps to authenticate the user
+2. Issue a token 
+
+
+## The common ASP.NET MVC authentication ##
+As an enterprise application developer, I used to create my asp.net mvc web application based on the common stack:
+
+#### The Flow ####
+1. User comes to our web application, redirect to the Login Page if needed
+2. User enter their UserId,Password, and Login
+3. If success, a login `cookie` is created, without expiration, the user is treated as authenticated in this browser session
+4. When the cookie expires or when the user Logout, they have to relogin again next time when they visited
+
+#### The Implementation ####
+1. Implement your own Authentication/Membership Service( decoupling this by using Dependency Injection) to be used by your Account Controller , which gives me something like
+- Validation, using UserId/Email and Password to validate a user
+- Sign in, adding <a href="http://msdn.microsoft.com/en-us/library/system.web.security.formsauthenticationticket(v=vs.110).aspx" target="_blank">FormsAuthenticationTicket</a> to the cookie
+- Sign out, removing the cookie
+
+2. To protect your pages in MVC for only anthenticated user or user in certain roles
+- implement your own <a href"http://msdn.microsoft.com/en-us/library/system.web.mvc.iauthorizationfilter(v=vs.118).aspx" target="_blank">IAuthorizationFilter</a> to protect your Controller or Action
+
+
+## The mobile app authentication ##
+Usually, a mobile app is only used by a single user, they however only need to Login Once! After that whever they open they app again, they will probably assume they have "logined"
+
+#### The Flow ####
+1. User open the app for the first time, login with their UserId,Password
+2. User access to the app assuming they are always logined
+
+#### The Implementation ####
+1. Issuing a Token instead of 
+
+
+To allow an mobile app to authenticate our existing system, we have to think about how the mobile app will interact with our system, and how we can enhance and reuse our code.
+
+With our ASP.NET MVC authentication
+
+#### Different experience ####
+
+
+
+Now as a new requirement for building a mobile app, the workflow of authentication has to be redesigned.
+
+I mostly implement my ASP.NET MVC application based on the basic authentication model, i.e. storing the user session as a cookie, checking it via a 
