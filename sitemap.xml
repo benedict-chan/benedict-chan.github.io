@@ -26,15 +26,21 @@
         <loc>
             http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api/
         </loc>
-        <lastmod>2014-02-11T14:51:23+11:00</lastmod>
+        <lastmod>2014-02-12T17:15:25+11:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard/
+        </loc>
+        <lastmod>2014-02-13T17:43:43+11:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/blog/archives/</loc>
-        <lastmod>2014-02-11T14:51:23+11:00</lastmod>
+        <lastmod>2014-02-13T17:43:43+11:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/</loc>
-        <lastmod>2014-02-11T14:51:23+11:00</lastmod>
+        <lastmod>2014-02-13T17:43:43+11:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/robots.txt</loc>

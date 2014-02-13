@@ -4,7 +4,7 @@
   <title><![CDATA[Category: asp.net mvc | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/asp-dot-net-mvc/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-02-11T14:51:23+11:00</updated>
+  <updated>2014-02-13T17:56:17+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Creating custom Filter Attribute in Orchard]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard/"/>
+    <updated>2014-02-12T17:14:23+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard</id>
+    <content type="html"><![CDATA[<h2>Filter in Orchard</h2>
+
+<p>When working in Orchard, it&rsquo;s always a good idea to look at the current codebase as an example.</p>
+
+<p>The one I chose as a reference in creating my custom filter attribute is the <code>Theme</code> filter.</p>
+
+<p>It is located in <code>$\Orchard\Themes\ThemeFilter.cs</code> inside the <code>Orchard.Framework</code> project.</p>
+
+<p>You will notice that <code>ThemeFilter</code> is actually inherited from a class called <code>FilterProvider</code>.
+
+``` cs ThemeFilter.cs start:1 mark:2
+namespace Orchard.Themes {</p>
+
+<pre><code>public class ThemeFilter : FilterProvider, IActionFilter, IResultFilter {
+    public void OnActionExecuting(ActionExecutingContext filterContext) {
+</code></pre>
+
+<p>```
+</p>
+
+<p>Now lets have a look inside <code>FilterProvider</code>.
+
+``` cs ThemeFilter.cs start:8 mark:14-21</p>
+
+<pre><code>public abstract class FilterProvider : IFilterProvider {
+    void IFilterProvider.AddFilters(FilterInfo filterInfo) {
+        AddFilters(filterInfo);
+    }
+
+    protected virtual void AddFilters(FilterInfo filterInfo) {
+        if (this is IAuthorizationFilter)
+            filterInfo.AuthorizationFilters.Add(this as IAuthorizationFilter);
+        if (this is IActionFilter)
+            filterInfo.ActionFilters.Add(this as IActionFilter);
+        if (this is IResultFilter)
+            filterInfo.ResultFilters.Add(this as IResultFilter);
+        if (this is IExceptionFilter)
+            filterInfo.ExceptionFilters.Add(this as IExceptionFilter);
+    }
+
+}
+</code></pre>
+
+<p>```
+</p>
+
+<p>Bingo, it turns out that if you create a class to inherit <code>FilterProvider</code> and some <code>IActionFilter</code>, they will be automatically applied to your actions as <code>ActionFilter</code> already.</p>
+
+<p>Note that Orchard is clever enough to help you to inject your dependencies using Autofac by constructor injection too.</p>
+
+<h2>Attribute in Orchard</h2>
+
+<!-- more -->
+
+
+<p>As you can see, when you created your custom filter, it actually automatically applied to <strong>all</strong> your actions.</p>
+
+<p>What happanes if you only want to apply your filter in certain actions using attribute?</p>
+
+<p>Its easy, just check the <code>ThemeFilter</code> and <code>ThemeAttribute</code> as an example:</p>
+
+<ol>
+<li>create your own attribute</li>
+<li>check whether the action contains this attribute inside your filter.</li>
+<li>apply what you want if the attribute exists or do nothing if it&rsquo;s not.</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ASP.NET MVC how to handle unauthorized response in JSON for your API]]></title>

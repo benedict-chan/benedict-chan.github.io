@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Creating custom Filter Attribute in Orchard - Benedict Chan</title>
+  <meta name="author" content="Benedict Chan">
+
+   
+  <meta name="description" content="Creating custom Filter Attribute in Orchard">
+  
+  <meta name="keywords" content="asp.net mvc, filterattribute, orchard cms, dependency injection">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard">
+  <link href="/favicon.png" rel="icon">
+  <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Benedict Chan" type="application/atom+xml">
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap-collapse.js"></script>
+  <script src="/js/modernizr-2.0.js"></script>
+  <script src="/js/octopress.js" type="text/javascript"></script>
+  <script src="/js/application.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47537615-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <div class="navbar navbar-inverse navbar-static-top">
+  	<div class="navbar-inner">
+  	  <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+          <span class="fui-menu-24"></span>
+        </a>
+  	  	<div class="nav-collapse collapse navbar-responsive-collapse" style="height:0;">
+  	      <ul class="nav">
+    
+</ul>
+
+<ul class="nav pull-right">
+    
+    <li><a href="http://github.com/benedict-chan" title="Github Profile"><i class="icon-github-sign social-navbar"></i></a></li>
+    
+    
+    
+    
+    
+    
+    
+
+    
+</ul>
+
+  	    </div>
+  	  </div>
+  	</div>
+  </div>
+  <div class="container" id="main">
+      <div class="row-fluid">
+        <div id="content">
+          <div>
+<article class="hentry" role="article">
+  
+
+  <header>
+  <div class="jumbotron">
+    Creating Custom Filter Attribute in Orchard
+	<h5>
+
+
+
+
+
+
+
+
+  
+
+
+<i class="icon-calendar-empty"></i> <time datetime="2014-02-12T17:14:23+11:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time></h5>
+  </div>
+</header>
+  <div class="row-fluid">
+    <div class="span12">
+      <h2>Filter in Orchard</h2>
+
+<p>When working in Orchard, it&rsquo;s always a good idea to look at the current codebase as an example.</p>
+
+<p>The one I chose as a reference in creating my custom filter attribute is the <code>Theme</code> filter.</p>
+
+<p>It is located in <code>$\Orchard\Themes\ThemeFilter.cs</code> inside the <code>Orchard.Framework</code> project.</p>
+
+<p>You will notice that <code>ThemeFilter</code> is actually inherited from a class called <code>FilterProvider</code>.</p>
+
+<figure class='code'><figcaption>ThemeFilter.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number marked start end'></div><div data-line='3' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'><span class="k">namespace</span> <span class="nn">Orchard.Themes</span> <span class="p">{</span>
+</div><div class='line marked start end'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">ThemeFilter</span> <span class="p">:</span> <span class="n">FilterProvider</span><span class="p">,</span> <span class="n">IActionFilter</span><span class="p">,</span> <span class="n">IResultFilter</span> <span class="p">{</span>
+</div><div class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">OnActionExecuting</span><span class="p">(</span><span class="n">ActionExecutingContext</span> <span class="n">filterContext</span><span class="p">)</span> <span class="p">{</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Now lets have a look inside <code>FilterProvider</code>.</p>
+
+<figure class='code'><figcaption>ThemeFilter.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number marked start'></div><div data-line='15' class='line-number marked'></div><div data-line='16' class='line-number marked'></div><div data-line='17' class='line-number marked'></div><div data-line='18' class='line-number marked'></div><div data-line='19' class='line-number marked'></div><div data-line='20' class='line-number marked'></div><div data-line='21' class='line-number marked end'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="nc">FilterProvider</span> <span class="p">:</span> <span class="n">IFilterProvider</span> <span class="p">{</span>
+</div><div class='line'>        <span class="k">void</span> <span class="n">IFilterProvider</span><span class="p">.</span><span class="n">AddFilters</span><span class="p">(</span><span class="n">FilterInfo</span> <span class="n">filterInfo</span><span class="p">)</span> <span class="p">{</span>
+</div><div class='line'>            <span class="n">AddFilters</span><span class="p">(</span><span class="n">filterInfo</span><span class="p">);</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">protected</span> <span class="k">virtual</span> <span class="k">void</span> <span class="nf">AddFilters</span><span class="p">(</span><span class="n">FilterInfo</span> <span class="n">filterInfo</span><span class="p">)</span> <span class="p">{</span>
+</div><div class='line marked start'>            <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="n">IAuthorizationFilter</span><span class="p">)</span>
+</div><div class='line marked'>                <span class="n">filterInfo</span><span class="p">.</span><span class="n">AuthorizationFilters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">this</span> <span class="k">as</span> <span class="n">IAuthorizationFilter</span><span class="p">);</span>
+</div><div class='line marked'>            <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="n">IActionFilter</span><span class="p">)</span>
+</div><div class='line marked'>                <span class="n">filterInfo</span><span class="p">.</span><span class="n">ActionFilters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">this</span> <span class="k">as</span> <span class="n">IActionFilter</span><span class="p">);</span>
+</div><div class='line marked'>            <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="n">IResultFilter</span><span class="p">)</span>
+</div><div class='line marked'>                <span class="n">filterInfo</span><span class="p">.</span><span class="n">ResultFilters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">this</span> <span class="k">as</span> <span class="n">IResultFilter</span><span class="p">);</span>
+</div><div class='line marked'>            <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="n">IExceptionFilter</span><span class="p">)</span>
+</div><div class='line marked end'>                <span class="n">filterInfo</span><span class="p">.</span><span class="n">ExceptionFilters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">this</span> <span class="k">as</span> <span class="n">IExceptionFilter</span><span class="p">);</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Bingo, it turns out that if you create a class to inherit <code>FilterProvider</code> and some <code>IActionFilter</code>, they will be automatically applied to your actions as <code>ActionFilter</code> already.</p>
+
+<p>Note that Orchard is clever enough to help you to inject your dependencies using Autofac by constructor injection too.</p>
+
+<h2>Attribute in Orchard</h2>
+
+<!-- more -->
+
+
+<p>As you can see, when you created your custom filter, it actually automatically applied to <strong>all</strong> your actions.</p>
+
+<p>What happanes if you only want to apply your filter in certain actions using attribute?</p>
+
+<p>Its easy, just check the <code>ThemeFilter</code> and <code>ThemeAttribute</code> as an example:</p>
+
+<ol>
+<li>create your own attribute</li>
+<li>check whether the action contains this attribute inside your filter.</li>
+<li>apply what you want if the attribute exists or do nothing if it&rsquo;s not.</li>
+</ol>
+
+
+    </div>
+  </div>
+
+
+
+  <footer>
+    <hr>
+    
+    <div class="row-fluid">
+      
+      <div class="span6">
+        <p class="meta">
+        
+        
+
+
+
+  <a href="/blog/categories/asp-dot-net-mvc/"><span class="badge">asp.net mvc</span></a>
+
+  <a href="/blog/categories/dependency-injection/"><span class="badge">dependency injection</span></a>
+
+  <a href="/blog/categories/orchard-cms/"><span class="badge">orchard cms</span></a>
+
+
+
+
+        </p>
+      </div>
+      
+      <div class="span6 social-sharing">
+        <div class="sharing">
+  <div class="addthis_toolbox addthis_default_style ">
+  
+  
+  <a class="addthis_button_tweet"></a>
+  
+  
+  <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+      </div>
+      
+      
+    </div>
+    
+    <div class="row-fluid">
+      <div class="span12">
+        <p class="meta">
+          
+            <a class="basic-alignment left" href="/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api/" title="Previous Post: ASP.NET MVC how to handle unauthorized response in JSON for your API">&laquo; ASP.NET MVC how to handle unauthorized response in JSON for your API</a>
+          
+          
+        </p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+
+
+        </div>
+      </div>
+      <div class="row-fluid">
+        <footer class="footer-page" role="contentinfo">
+          <p>
+  Copyright &copy; 2014 - Benedict Chan -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> - Theme by <a href="http://alexgaribay.com">Alex Garibay</a>
+</p>
+
+
+        </footer>
+      </div>
+  </div>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'benedictchan';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard/';
+        var disqus_url = 'http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
