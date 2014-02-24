@@ -1,4 +1,37 @@
 
+Adding Email Templates service in your ASP.NET MVC projects using IoC
+
+It looks obvious to give your web applications to send an email with some templates engine.
+After some googling, I decided to use <a href="http://aboutcode.net/postal/" target="_blank">Postal<a> as the preferred service because:
+1. It uses Razor engine for the template, which everyone is familar with
+2. It is based on the .NET framework's built in SmptClient ( so you can just config it using web.config )
+3. It is designed to be used in a dependency injection pattern (provide unit testing for your controllers or classes)
+
+## Using the IEmailService ##
+With a decoupled design, it is possible you will seperate your logics include sending an email in your logic classes but not in your asp.net controller.
+Therefore, an IEmailService that supports dependency injection is a better way to use than having an Email service just be used in a controller.
+To apply Postal in your class, we can simply inject it's IEmailService to our business logic class.
+
+
+    public class MembershipService : IMembershipService
+    {
+        private readonly PortalContext _db;
+        private readonly ICryptoService _cryptoService;
+        private readonly IEmailService _emailService;
+        public MembershipService(PortalContext db, ICryptoService cryptoService, IEmailService emailService)
+        {
+            this._db = db;
+            this._cryptoService = cryptoService;
+            this._emailService = emailService;
+        }
+
+
+
+
+
+
+## ##
+
 
 
 ## What we have ##
