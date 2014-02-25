@@ -118,6 +118,91 @@
   
 
 
+<i class="icon-calendar-empty"></i> <time datetime="2014-02-24T17:08:57+11:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc/">Adding Email Templates service in your ASP.NET MVC projects using IoC</a></h1>
+      <p>It looks obvious to give your web applications to send an email with some templates engine.
+After some googling, I decided to use <a href="http://aboutcode.net/postal/" target="_blank">Postal</a> as the preferred service because:
+1. It uses Razor engine for the template, which everyone is familar with
+2. It is based on the .NET framework&rsquo;s built in SmptClient ( so you can just config it using web.config )
+3. It is designed to be used in a dependency injection pattern (provide unit testing for your controllers or classes)</p>
+
+<h2>Using the IEmailService</h2>
+
+<p>With a decoupled design, it is possible you will seperate your logics include sending an email in your logic classes but not in your asp.net controller.
+Therefore, an IEmailService that supports dependency injection is a better way to use than having an Email service just be used in a controller.
+To apply Postal in your class, we can simply inject it&rsquo;s IEmailService to our business logic class.</p>
+
+<figure class='code'><figcaption>BusinessService.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BusinessService</span> <span class="p">:</span> <span class="n">IBusinessService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IEmailService</span> <span class="n">_emailService</span><span class="p">;</span>
+</div><div class='line'>        <span class="k">public</span> <span class="nf">BusinessService</span><span class="p">(</span><span class="n">IEmailService</span> <span class="n">emailService</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_emailService</span> <span class="p">=</span> <span class="n">emailService</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h3>And your controller</h3>
+
+<figure class='code'><figcaption>SomeController.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">SomeController</span> <span class="p">:</span> <span class="n">Controller</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IBusinessService</span> <span class="n">_businessService</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">public</span> <span class="nf">SomeController</span><span class="p">(</span><span class="n">IBusinessService</span> <span class="n">businessService</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_businessService</span> <span class="p">=</span> <span class="n">businessService</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h3>Register the service using Autoface as our IoC</h3>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">RegisterType</span><span class="p">&lt;</span><span class="n">EmailService</span><span class="p">&gt;().</span><span class="n">As</span><span class="p">&lt;</span><span class="n">IEmailService</span><span class="p">&gt;();</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Now you can create your email templates in your <code>Views\Emails</code> folder and send it inside your business logics class</p>
+
+      
+      
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
 <i class="icon-calendar-empty"></i> <time datetime="2014-02-12T17:14:23+11:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           
