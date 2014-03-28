@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-02-24T17:17:01+11:00</updated>
+  <updated>2014-03-28T17:39:54+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -14,9 +14,123 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Authentication logics from ASP.NET MVC 4 to 5]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5/"/>
+    <updated>2014-03-28T16:14:24+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5</id>
+    <content type="html"><![CDATA[<h2>OWIN</h2>
+
+<p>To allow security sharing by other components that can be hosted on <a href="http://owin.org/" target="_blank">OWIN</a>.
+<strong>ASP.NET MVC 5</strong>  has applied a new security feature based on the <strong>OWIN</strong> authentication middleware.</p>
+
+<p>For more information, please click <a href="http://blogs.msdn.com/b/webdev/archive/2013/07/03/understanding-owin-forms-authentication-in-mvc-5.aspx" target="_blank">here</a>.</p>
+
+<p>To start, let&rsquo;s create a new project based on Visual Studio 2013&rsquo;s  template: <strong>Individual User Accounts</strong>.</p>
+
+<h2>MVC5 Template: Individual User Accounts</h2>
+
+<p>Have a look in this newly created project&rsquo;s <code>web.config</code>. You will find that <code>FormsAuthenticationModule</code> is removed.</p>
+
+<figure class='code'><figcaption>web.config </figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'><span class="p">&lt;</span><span class="n">system</span><span class="p">.</span><span class="n">webServer</span><span class="p">&gt;</span>
+</div><div class='line'>    <span class="p">&lt;</span><span class="n">modules</span><span class="p">&gt;</span>
+</div><div class='line'>        <span class="p">&lt;</span><span class="k">remove</span> <span class="n">name</span><span class="p">=</span><span class="s">&quot;FormsAuthenticationModule&quot;</span> <span class="p">/&gt;</span>
+</div><div class='line'>    <span class="p">&lt;/</span><span class="n">modules</span><span class="p">&gt;</span>
+</div><div class='line'><span class="p">&lt;/</span><span class="n">system</span><span class="p">.</span><span class="n">webServer</span><span class="p">&gt;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Now also have a look in what&rsquo;s the new logics is added for supporting <strong>OWIN</strong>.</p>
+
+<figure class='code'><figcaption>\app_start\startup.auth.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number marked start'></div><div data-line='15' class='line-number marked'></div><div data-line='16' class='line-number marked'></div><div data-line='17' class='line-number marked'></div><div data-line='18' class='line-number marked end'></div><div data-line='19' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureAuth</span><span class="p">(</span><span class="n">IAppBuilder</span> <span class="n">app</span><span class="p">)</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="c1">// Enable the application to use a cookie to store information for the signed in user</span>
+</div><div class='line'>        <span class="n">app</span><span class="p">.</span><span class="n">UseCookieAuthentication</span><span class="p">(</span><span class="k">new</span> <span class="n">CookieAuthenticationOptions</span>
+</div><div class='line marked start'>        <span class="p">{</span>
+</div><div class='line marked'>            <span class="n">AuthenticationType</span> <span class="p">=</span> <span class="n">DefaultAuthenticationTypes</span><span class="p">.</span><span class="n">ApplicationCookie</span><span class="p">,</span>
+</div><div class='line marked'>            <span class="n">LoginPath</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PathString</span><span class="p">(</span><span class="s">&quot;/Account/Login&quot;</span><span class="p">)</span>
+</div><div class='line marked'>        <span class="p">});</span>
+</div><div class='line marked end'>        <span class="c1">// Use a cookie to temporarily store information about a user logging in with a third party login provider</span>
+</div><div class='line'>        <span class="n">app</span><span class="p">.</span><span class="n">UseExternalSignInCookie</span><span class="p">(</span><span class="n">DefaultAuthenticationTypes</span><span class="p">.</span><span class="n">ExternalCookie</span><span class="p">);</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>It looks like the template offers a <code>Cookie</code> authentication as default, does it work if we applies our <strong>ASP.NET MVC 4</strong>&rsquo;s <code>FormsAuthenticationTicket</code> to it?</p>
+
+<h2>FormsAuthenticationTicket in MVC4</h2>
+
+<p>We normally authenticate users in the following way in MVC4</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>            <span class="kt">var</span> <span class="n">ticket</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FormsAuthenticationTicket</span><span class="p">(..);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">encryptedTicket</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">Encrypt</span><span class="p">(</span><span class="n">ticket</span><span class="p">);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">cookie</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpCookie</span><span class="p">(</span><span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">FormsCookieName</span><span class="p">,</span> <span class="n">encryptedTicket</span><span class="p">)</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="n">HttpOnly</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span> <span class="n">Path</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">FormsCookiePath</span>
+</div><div class='line'>            <span class="p">};</span>
+</div><div class='line'>            <span class="n">Response</span><span class="p">.</span><span class="n">Cookies</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">cookie</span><span class="p">);</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Now, if we apply this logic in our <strong>MVC5</strong> application, we will find that we do have added our authentication cookie, however, as <strong>MVC5</strong> follows the OWIN middleware, it has no way to understand our user is authenticated or not in <code>Request.IsAuthenticated</code>.</p>
+
+<h2>AuthenticationManager in MVC5</h2>
+
+<p>Now, lets have a look how MVC5 SignIn a user</p>
+
+<figure class='code'><figcaption>AccountController.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number marked start end'></div><div data-line='6' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>        <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">SignInAsync</span><span class="p">(</span><span class="n">ApplicationUser</span> <span class="n">user</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isPersistent</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="n">AuthenticationManager</span><span class="p">.</span><span class="n">SignOut</span><span class="p">(</span><span class="n">DefaultAuthenticationTypes</span><span class="p">.</span><span class="n">ExternalCookie</span><span class="p">);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">identity</span> <span class="p">=</span> <span class="k">await</span> <span class="n">UserManager</span><span class="p">.</span><span class="n">CreateIdentityAsync</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">DefaultAuthenticationTypes</span><span class="p">.</span><span class="n">ApplicationCookie</span><span class="p">);</span>
+</div><div class='line marked start end'>            <span class="n">AuthenticationManager</span><span class="p">.</span><span class="n">SignIn</span><span class="p">(</span><span class="k">new</span> <span class="n">AuthenticationProperties</span><span class="p">()</span> <span class="p">{</span> <span class="n">IsPersistent</span> <span class="p">=</span> <span class="n">isPersistent</span> <span class="p">},</span> <span class="n">identity</span><span class="p">);</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>A user is authenticated by calling <code>AuthenticationManager.SignIn</code>, to understand more details in it, we can have a look in the <a target="_blank" href="http://katanaproject.codeplex.com/SourceControl/latest#src/Microsoft.Owin/Security/AuthenticationManager.cs">Katana Project</a>.</p>
+
+<h2>Solution</h2>
+
+<p>So, in order to <strong>SignIn</strong> a user, we just have to call the method <code>AuthenticationManager.SignIn</code>, which, request us to have a Claims base Identity implementation. By having a look in the <a target="_blank" href="http://katanaproject.codeplex.com">Katana Project</a>, we can easily create one for ourselves, below is an example of the rewrite of the <code>SignInAsync</code>:</p>
+
+<figure class='code'><figcaption>AccountController.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number marked start'></div><div data-line='4' class='line-number marked'></div><div data-line='5' class='line-number marked end'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>        <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">SignInAsync</span><span class="p">(</span><span class="n">ApplicationUser</span> <span class="n">user</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isPersistent</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line marked start'>            <span class="c1">//AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);</span>
+</div><div class='line marked'>            <span class="kt">var</span> <span class="n">claimsIdentity</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ClaimsIdentity</span><span class="p">(</span>
+</div><div class='line marked end'>                <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="k">new</span> <span class="n">Claim</span><span class="p">(</span><span class="n">ClaimsIdentity</span><span class="p">.</span><span class="n">DefaultNameClaimType</span><span class="p">,</span> <span class="n">user</span><span class="p">.</span><span class="n">UserName</span><span class="p">)</span> <span class="p">},</span>
+</div><div class='line'>                <span class="n">DefaultAuthenticationTypes</span><span class="p">.</span><span class="n">ApplicationCookie</span><span class="p">);</span>
+</div><div class='line'>            <span class="n">AuthenticationManager</span><span class="p">.</span><span class="n">SignIn</span><span class="p">(</span><span class="k">new</span> <span class="n">AuthenticationProperties</span><span class="p">()</span> <span class="p">{</span> <span class="n">IsPersistent</span> <span class="p">=</span> <span class="n">isPersistent</span> <span class="p">}</span> <span class="p">,</span> <span class="n">claimsIdentity</span><span class="p">);</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Now, let&rsquo;s run our application, and we will see can SignIn a user by our own <code>Claims</code>.</p>
+
+<h2>ClaimsIdentity was not present</h2>
+
+<p>When we run the above example, we will find an exception will be raised complaining <code>A claim of type 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier' or 'http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider' was not present on the provided ClaimsIdentity.</code></p>
+
+<p>The reason of this error occurs because we have now implemented our own claims for our user, and we therefore need to tell <code>AntiForgery</code> how to identify our user&rsquo;s uniqueless based on our claim. The solution is as easy as adding the following line in <code>Global.asax.cs</code></p>
+
+<figure class='code'><figcaption>Global.asax.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number marked start end'></div><div data-line='23' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>        <span class="k">protected</span> <span class="k">void</span> <span class="nf">Application_Start</span><span class="p">()</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="n">AreaRegistration</span><span class="p">.</span><span class="n">RegisterAllAreas</span><span class="p">();</span>
+</div><div class='line'>            <span class="n">FilterConfig</span><span class="p">.</span><span class="n">RegisterGlobalFilters</span><span class="p">(</span><span class="n">GlobalFilters</span><span class="p">.</span><span class="n">Filters</span><span class="p">);</span>
+</div><div class='line'>            <span class="n">RouteConfig</span><span class="p">.</span><span class="n">RegisterRoutes</span><span class="p">(</span><span class="n">RouteTable</span><span class="p">.</span><span class="n">Routes</span><span class="p">);</span>
+</div><div class='line'>            <span class="n">BundleConfig</span><span class="p">.</span><span class="n">RegisterBundles</span><span class="p">(</span><span class="n">BundleTable</span><span class="p">.</span><span class="n">Bundles</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line marked start end'>            <span class="n">AntiForgeryConfig</span><span class="p">.</span><span class="n">UniqueClaimTypeIdentifier</span> <span class="p">=</span> <span class="n">ClaimTypes</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>Note that I use <code>ClaimTypes.Name</code> because I have added the claims using <code>ClaimsIdentity.DefaultNameClaimType</code>, we can use a list of predefined claim types by the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.security.claims.claimtypes(v=vs.110).aspx">ClaimTypes</a> class.</p>
+
+<p><span id="exception-error" style="display:none">A claim of type &lsquo;<a href="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier</a>&rsquo; or &lsquo;<a href="http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider">http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider</a>&rsquo; was not present on the provided ClaimsIdentity. To enable anti-forgery token support with claims-based authentication, please verify that the configured claims provider is providing both of these claims on the ClaimsIdentity instances it generates. If the configured claims provider instead uses a different claim type as a unique identifier, it can be configured by setting the static property AntiForgeryConfig.UniqueClaimTypeIdentifier.</span></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Adding Email Templates service in your ASP.NET MVC projects using IoC]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc/"/>
-    <updated>2014-02-24T17:08:57+11:00</updated>
+    <updated>2014-02-24T17:18:57+11:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc</id>
     <content type="html"><![CDATA[<p>It looks obvious to give your web applications to send an email with some templates engine.
 After some googling, I decided to use <a href="http://aboutcode.net/postal/" target="_blank">Postal</a> as the preferred service because:

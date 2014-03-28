@@ -4,7 +4,7 @@
   <title><![CDATA[Category: dependency injection | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/dependency-injection/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-02-24T17:17:01+11:00</updated>
+  <updated>2014-03-28T17:39:54+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Adding Email Templates service in your ASP.NET MVC projects using IoC]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc/"/>
+    <updated>2014-02-24T17:18:57+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc</id>
+    <content type="html"><![CDATA[<p>It looks obvious to give your web applications to send an email with some templates engine.
+After some googling, I decided to use <a href="http://aboutcode.net/postal/" target="_blank">Postal</a> as the preferred service because:
+1. It uses Razor engine for the template, which everyone is familar with
+2. It is based on the .NET framework&rsquo;s built in SmptClient ( so you can just config it using web.config )
+3. It is designed to be used in a dependency injection pattern (provide unit testing for your controllers or classes)</p>
+
+<h2>Using the IEmailService</h2>
+
+<p>With a decoupled design, it is possible you will seperate your logics include sending an email in your logic classes but not in your asp.net controller.
+Therefore, an IEmailService that supports dependency injection is a better way to use than having an Email service just be used in a controller.
+To apply Postal in your class, we can simply inject it&rsquo;s IEmailService to our business logic class.</p>
+
+<p>
+``` cs BusinessService.cs</p>
+
+<pre><code>public class BusinessService : IBusinessService
+{
+    private readonly IEmailService _emailService;
+    public BusinessService(IEmailService emailService)
+    {
+        this._emailService = emailService;
+    }
+}
+</code></pre>
+
+<p>```
+</p>
+
+<h3>And your controller</h3>
+
+<p>
+``` cs SomeController.cs</p>
+
+<pre><code>public class SomeController : Controller
+{
+    private readonly IBusinessService _businessService;
+
+    public SomeController(IBusinessService businessService)
+    {
+        this._businessService = businessService;
+    }
+</code></pre>
+
+<p>```
+</p>
+
+<h3>Register the service using Autoface as our IoC</h3>
+
+<p>
+``` cs</p>
+
+<pre><code>        builder.RegisterType&lt;EmailService&gt;().As&lt;IEmailService&gt;();
+</code></pre>
+
+<p>```
+</p>
+
+<p>Now you can create your email templates in your <code>Views\Emails</code> folder and send it inside your business logics class</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating custom Filter Attribute in Orchard]]></title>

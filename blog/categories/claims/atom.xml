@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: claims | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/claims/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-03-28T17:39:54+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Authentication logics from ASP.NET MVC 4 to 5]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5/"/>
+    <updated>2014-03-28T16:14:24+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5</id>
+    <content type="html"><![CDATA[<h2>OWIN</h2>
+
+<p>To allow security sharing by other components that can be hosted on <a href="http://owin.org/" target="_blank">OWIN</a>.
+<strong>ASP.NET MVC 5</strong>  has applied a new security feature based on the <strong>OWIN</strong> authentication middleware.</p>
+
+<p>For more information, please click <a href="http://blogs.msdn.com/b/webdev/archive/2013/07/03/understanding-owin-forms-authentication-in-mvc-5.aspx" target="_blank">here</a>.</p>
+
+<p>To start, let&rsquo;s create a new project based on Visual Studio 2013&rsquo;s  template: <strong>Individual User Accounts</strong>.</p>
+
+<h2>MVC5 Template: Individual User Accounts</h2>
+
+<p>Have a look in this newly created project&rsquo;s <code>web.config</code>. You will find that <code>FormsAuthenticationModule</code> is removed.</p>
+
+<p>
+``` cs web.config
+&lt;system.webServer></p>
+
+<pre><code>&lt;modules&gt;
+    &lt;remove name="FormsAuthenticationModule" /&gt;
+&lt;/modules&gt;
+</code></pre>
+
+<p>&lt;/system.webServer>
+```
+</p>
+
+<p>Now also have a look in what&rsquo;s the new logics is added for supporting <strong>OWIN</strong>.
+
+``` cs \app_start\startup.auth.cs start:10 mark:14-18,20</p>
+
+<pre><code>public void ConfigureAuth(IAppBuilder app)
+{
+    // Enable the application to use a cookie to store information for the signed in user
+    app.UseCookieAuthentication(new CookieAuthenticationOptions
+    {
+        AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+        LoginPath = new PathString("/Account/Login")
+    });
+    // Use a cookie to temporarily store information about a user logging in with a third party login provider
+    app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+</code></pre>
+
+<p>```
+</p>
+
+<p>It looks like the template offers a <code>Cookie</code> authentication as default, does it work if we applies our <strong>ASP.NET MVC 4</strong>&rsquo;s <code>FormsAuthenticationTicket</code> to it?</p>
+
+<h2>FormsAuthenticationTicket in MVC4</h2>
+
+<p>We normally authenticate users in the following way in MVC4
+
+``` cs</p>
+
+<pre><code>        var ticket = new FormsAuthenticationTicket(..);
+        var encryptedTicket = FormsAuthentication.Encrypt(ticket);
+        var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+        {
+            HttpOnly = true, Path = FormsAuthentication.FormsCookiePath
+        };
+        Response.Cookies.Add(cookie);
+</code></pre>
+
+<p>```
+</p>
+
+<p>Now, if we apply this logic in our <strong>MVC5</strong> application, we will find that we do have added our authentication cookie, however, as <strong>MVC5</strong> follows the OWIN middleware, it has no way to understand our user is authenticated or not in <code>Request.IsAuthenticated</code>.</p>
+
+<h2>AuthenticationManager in MVC5</h2>
+
+<p>Now, lets have a look how MVC5 SignIn a user
+
+``` cs AccountController.cs start:1 mark:5</p>
+
+<pre><code>    private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+    {
+        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+        var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+        AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+    }
+</code></pre>
+
+<p><code>``
+
+A user is authenticated by calling</code>AuthenticationManager.SignIn`, to understand more details in it, we can have a look in the <a target="_blank" href="http://katanaproject.codeplex.com/SourceControl/latest#src/Microsoft.Owin/Security/AuthenticationManager.cs">Katana Project</a>.</p>
+
+<h2>Solution</h2>
+
+<p>So, in order to <strong>SignIn</strong> a user, we just have to call the method <code>AuthenticationManager.SignIn</code>, which, request us to have a Claims base Identity implementation. By having a look in the <a target="_blank" href="http://katanaproject.codeplex.com">Katana Project</a>, we can easily create one for ourselves, below is an example of the rewrite of the <code>SignInAsync</code>:
+
+``` cs AccountController.cs start:1 mark:3-5</p>
+
+<pre><code>    private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+    {
+        //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+        var claimsIdentity = new ClaimsIdentity(
+            new[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) },
+            DefaultAuthenticationTypes.ApplicationCookie);
+        AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent } , claimsIdentity);
+    }
+</code></pre>
+
+<p>```
+</p>
+
+<p>Now, let&rsquo;s run our application, and we will see can SignIn a user by our own <code>Claims</code>.</p>
+
+<h2>ClaimsIdentity was not present</h2>
+
+<p>When we run the above example, we will find an exception will be raised complaining <code>A claim of type 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier' or 'http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider' was not present on the provided ClaimsIdentity.</code></p>
+
+<p>The reason of this error occurs because we have now implemented our own claims for our user, and we therefore need to tell <code>AntiForgery</code> how to identify our user&rsquo;s uniqueless based on our claim. The solution is as easy as adding the following line in <code>Global.asax.cs</code>
+
+``` cs Global.asax.cs start:15 mark:22</p>
+
+<pre><code>    protected void Application_Start()
+    {
+        AreaRegistration.RegisterAllAreas();
+        FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+        RouteConfig.RegisterRoutes(RouteTable.Routes);
+        BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+        AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
+    }
+</code></pre>
+
+<p>```
+</p>
+
+<p>Note that I use <code>ClaimTypes.Name</code> because I have added the claims using <code>ClaimsIdentity.DefaultNameClaimType</code>, we can use a list of predefined claim types by the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.security.claims.claimtypes(v=vs.110).aspx">ClaimTypes</a> class.</p>
+
+<p><span id="exception-error" style="display:none">A claim of type &lsquo;<a href="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier</a>&rsquo; or &lsquo;<a href="http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider">http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider</a>&rsquo; was not present on the provided ClaimsIdentity. To enable anti-forgery token support with claims-based authentication, please verify that the configured claims provider is providing both of these claims on the ClaimsIdentity instances it generates. If the configured claims provider instead uses a different claim type as a unique identifier, it can be configured by setting the static property AntiForgeryConfig.UniqueClaimTypeIdentifier.</span></p>
+]]></content>
+  </entry>
+  
+</feed>
