@@ -3,9 +3,9 @@ layout: post
 title: "Authentication logics from ASP.NET MVC 4 to 5"
 date: 2014-03-28 16:14:24 +1100
 comments: true
-categories: ["asp.net mvc", "owin", "authentication", ""]
-description: Creating custom Filter Attribute in Orchard
-keywords: "asp.net mvc, filterattribute, orchard cms, dependency injection"
+categories: ["asp.net mvc", "owin", "authentication", "claims"]
+description: Authentication logics from ASP.NET MVC 4 to 5
+keywords: "asp.net mvc, mvc4, mvc5, FormsAuthentication, claims, ClaimTypes, ClaimsIdentity, AuthenticationProperties, SignInAsync"
 ---
 
 
@@ -99,7 +99,24 @@ So, in order to **SignIn** a user, we just have to call the method `Authenticati
 Now, let's run our application, and we will see can SignIn a user by our own `Claims`.
 
 ## ClaimsIdentity was not present ##
-When we run the above example, we will find an exception will be raised complaining
+When we run the above example, we will find an exception will be raised complaining `A claim of type 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier' or 'http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider' was not present on the provided ClaimsIdentity.`
+
+The reason of this error occurs because we have now implemented our own claims for our user, and we therefore need to tell `AntiForgery` how to identify our user's uniqueless based on our claim. The solution is as easy as adding the following line in `Global.asax.cs` 
+{% raw %}
+``` cs Global.asax.cs start:15 mark:22
+        protected void Application_Start()
+        {
+            AreaRegistration.RegisterAllAreas();
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
+        }
+```
+{% endraw %}
+
+Note that I use `ClaimTypes.Name` because I have added the claims using `ClaimsIdentity.DefaultNameClaimType`, we can use a list of predefined claim types by the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.security.claims.claimtypes(v=vs.110).aspx">ClaimTypes</a> class.
 
 
 
