@@ -4,7 +4,7 @@
   <title><![CDATA[Category: asp.net mvc | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/asp-dot-net-mvc/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-03-28T17:39:54+11:00</updated>
+  <updated>2014-04-07T18:16:54+10:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -29,7 +29,7 @@
 
 <h2>MVC5 Template: Individual User Accounts</h2>
 
-<p>Have a look in this newly created project&rsquo;s <code>web.config</code>. You will find that <code>FormsAuthenticationModule</code> is removed.</p>
+<p>Have a look in the <code>web.config</code> of this newly created project. We will find that <code>FormsAuthenticationModule</code> is removed.</p>
 
 <p>
 ``` cs web.config
@@ -44,9 +44,9 @@
 ```
 </p>
 
-<p>Now also have a look in what&rsquo;s the new logics is added for supporting <strong>OWIN</strong>.
+<p>Now also have a look in what&rsquo;s the new logic is added for supporting <strong>OWIN</strong>.
 
-``` cs \app_start\startup.auth.cs start:10 mark:14-18,20</p>
+``` cs \app_start\startup.auth.cs start:10 mark:13-17,19</p>
 
 <pre><code>public void ConfigureAuth(IAppBuilder app)
 {
@@ -64,6 +64,9 @@
 </p>
 
 <p>It looks like the template offers a <code>Cookie</code> authentication as default, does it work if we applies our <strong>ASP.NET MVC 4</strong>&rsquo;s <code>FormsAuthenticationTicket</code> to it?</p>
+
+<!-- more -->
+
 
 <h2>FormsAuthenticationTicket in MVC4</h2>
 
@@ -87,7 +90,7 @@
 
 <h2>AuthenticationManager in MVC5</h2>
 
-<p>Now, lets have a look how MVC5 SignIn a user
+<p>Now, lets have a look in how MVC5 SignIn a user
 
 ``` cs AccountController.cs start:1 mark:5</p>
 
@@ -101,15 +104,15 @@
 
 <p><code>``
 
-A user is authenticated by calling</code>AuthenticationManager.SignIn`, to understand more details in it, we can have a look in the <a target="_blank" href="http://katanaproject.codeplex.com/SourceControl/latest#src/Microsoft.Owin/Security/AuthenticationManager.cs">Katana Project</a>.</p>
+A user is authenticated by calling</code>AuthenticationManager.SignIn`, to understand more details in it, we can have a look in the <a target="_blank" href="http://katanaproject.codeplex.com/SourceControl/latest#src/Microsoft.Owin/Security/AuthenticationManager.cs">Katana Project&rsquo;s AuthenticationManager</a>.</p>
 
 <h2>Solution</h2>
 
 <p>So, in order to <strong>SignIn</strong> a user, we just have to call the method <code>AuthenticationManager.SignIn</code>, which, request us to have a Claims base Identity implementation. By having a look in the <a target="_blank" href="http://katanaproject.codeplex.com">Katana Project</a>, we can easily create one for ourselves, below is an example of the rewrite of the <code>SignInAsync</code>:
 
-``` cs AccountController.cs start:1 mark:3-5</p>
+``` cs AccountController.cs start:1 mark:4-7</p>
 
-<pre><code>    private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+<pre><code>    private async Task SignInAsync(IUser user, bool isPersistent)
     {
         //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
         var claimsIdentity = new ClaimsIdentity(
@@ -122,13 +125,15 @@ A user is authenticated by calling</code>AuthenticationManager.SignIn`, to under
 <p>```
 </p>
 
-<p>Now, let&rsquo;s run our application, and we will see can SignIn a user by our own <code>Claims</code>.</p>
+<p>Now, let&rsquo;s run our application, and we will a user can SignIn using our own <code>Claims</code>.</p>
 
-<h2>ClaimsIdentity was not present</h2>
+<h2>Exception: ClaimsIdentity was not present</h2>
 
-<p>When we run the above example, we will find an exception will be raised complaining <code>A claim of type 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier' or 'http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider' was not present on the provided ClaimsIdentity.</code></p>
+<p>We can successfully signin by the example above, however, we will also find an exception being raised complaining:</p>
 
-<p>The reason of this error occurs because we have now implemented our own claims for our user, and we therefore need to tell <code>AntiForgery</code> how to identify our user&rsquo;s uniqueless based on our claim. The solution is as easy as adding the following line in <code>Global.asax.cs</code>
+<blockquote><p>A claim of type &lsquo;<a href="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier</a>&rsquo; or &lsquo;<a href="http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider">http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider</a>&rsquo; was not present on the provided ClaimsIdentity.</p></blockquote>
+
+<p>The reason of this error occurs is because we have now implemented our own claims for our user, and we therefore need to tell <code>AntiForgery</code> how to identify our user&rsquo;s uniqueless based on our claim. The solution is as easy as adding the following line in <code>Global.asax.cs</code>
 
 ``` cs Global.asax.cs start:15 mark:22</p>
 
@@ -146,7 +151,7 @@ A user is authenticated by calling</code>AuthenticationManager.SignIn`, to under
 <p>```
 </p>
 
-<p>Note that I use <code>ClaimTypes.Name</code> because I have added the claims using <code>ClaimsIdentity.DefaultNameClaimType</code>, we can use a list of predefined claim types by the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.security.claims.claimtypes(v=vs.110).aspx">ClaimTypes</a> class.</p>
+<p>Note that I use <code>ClaimTypes.Name</code> because I have added the claims using <code>ClaimsIdentity.DefaultNameClaimType</code>, we can use a list of predefined claim types by the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.security.claims.claimtypes(v=vs.110).aspx">ClaimTypes</a> class defined in .NET too.</p>
 
 <p><span id="exception-error" style="display:none">A claim of type &lsquo;<a href="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier</a>&rsquo; or &lsquo;<a href="http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider">http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider</a>&rsquo; was not present on the provided ClaimsIdentity. To enable anti-forgery token support with claims-based authentication, please verify that the configured claims provider is providing both of these claims on the ClaimsIdentity instances it generates. If the configured claims provider instead uses a different claim type as a unique identifier, it can be configured by setting the static property AntiForgeryConfig.UniqueClaimTypeIdentifier.</span></p>
 ]]></content>
