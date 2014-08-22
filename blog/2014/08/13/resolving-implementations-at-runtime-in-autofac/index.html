@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Resolving implementations at runtime using Autofac - Benedict Chan</title>
+  <meta name="author" content="Benedict Chan">
+
+   
+  <meta name="description" content="Benedict Chan's thoughts, questions, and development notes">
+  
+  <meta name="keywords" content="resolve runtime implementations, dependency injection, factory, func<>, Dynamic instantiation">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac">
+  <link href="/favicon.png" rel="icon">
+  <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Benedict Chan" type="application/atom+xml">
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap-collapse.js"></script>
+  <script src="/js/modernizr-2.0.js"></script>
+  <script src="/js/octopress.js" type="text/javascript"></script>
+  <script src="/js/application.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47537615-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <div class="navbar navbar-inverse navbar-static-top">
+  	<div class="navbar-inner">
+  	  <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+          <span class="fui-menu-24"></span>
+        </a>
+  	  	<div class="nav-collapse collapse navbar-responsive-collapse" style="height:0;">
+  	      <ul class="nav">
+    
+</ul>
+
+<ul class="nav pull-right">
+    
+    <li><a href="http://github.com/benedict-chan" title="Github Profile"><i class="icon-github-sign social-navbar"></i></a></li>
+    
+    
+    
+    
+    
+    
+    
+
+    
+</ul>
+
+  	    </div>
+  	  </div>
+  	</div>
+  </div>
+  <div class="container" id="main">
+      <div class="row-fluid">
+        <div id="content">
+          <div>
+<article class="hentry" role="article">
+  
+
+  <header>
+  <div class="jumbotron">
+    Resolving Implementations at Runtime Using Autofac
+	<h5>
+
+
+
+
+
+
+
+
+  
+
+
+<i class="icon-calendar-empty"></i> <time datetime="2014-08-13T20:02:01+10:00" pubdate data-updated="true">Aug 13<span>th</span>, 2014</time></h5>
+  </div>
+</header>
+  <div class="row-fluid">
+    <div class="span12">
+      <p>There are lots of ways on resolving your services and implementations at runtime in Autofac. Following is a simple example to demonstrate how we can do it.</p>
+
+<p>Assumng we have a simple interface <code>IDataService</code> that will provide us some data.</p>
+
+<figure class='code'><figcaption>IDataService.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">interface</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="kt">string</span> <span class="nf">GetData</span><span class="p">();</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>We are consuming this service and will return our users the data based on their <code>Role</code>, there are two roles in this example.
+And we are providing different implementation for the <code>IDataService</code> for each role.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">enum</span> <span class="n">RoleName</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="n">Premium</span><span class="p">,</span>
+</div><div class='line'>        <span class="n">Normal</span>
+</div><div class='line'>    <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">PremiumDataService</span> <span class="p">:</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="p">....</span>
+</div><div class='line'>    <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">NormalDataService</span> <span class="p">:</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="p">....</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>Simple Solution using Func&lt;> as our factory in Autofac</h2>
+
+<p>We will use a simple function <code>Func&lt;RoleName, IDataService&gt;</code> as our dependency in our <code>Controller</code>. It will act as our factory so that we can consume this factory to get our expected data.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;</span> <span class="n">_dataServiceFactory</span><span class="p">;</span>
+</div><div class='line'>        <span class="k">public</span> <span class="nf">HomeController</span><span class="p">(</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;</span> <span class="n">dataServiceFactory</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_dataServiceFactory</span> <span class="p">=</span> <span class="n">dataServiceFactory</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">public</span> <span class="n">ActionResult</span> <span class="nf">GetData</span><span class="p">()</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="p">....</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">dataService</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_dataServiceFactory</span><span class="p">(</span><span class="n">roleType</span><span class="p">);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">dataService</span><span class="p">.</span><span class="n">GetData</span><span class="p">();</span>
+</div><div class='line'>            <span class="p">....</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<h2>Autofac registration for Func&lt;> (First version)</h2>
+
+<p>To config this <code>Func&lt;RoleName, IDataService&gt;</code> in Autofac, we can simple do this:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="k">return</span> <span class="p">(</span><span class="n">roleName</span><span class="p">)</span> <span class="p">=&gt;</span>
+</div><div class='line'>                <span class="p">{</span>
+</div><div class='line'>                    <span class="k">switch</span> <span class="p">(</span><span class="n">roleName</span><span class="p">)</span>
+</div><div class='line'>                    <span class="p">{</span>
+</div><div class='line'>                        <span class="k">case</span> <span class="n">RoleName</span><span class="p">.</span><span class="n">Premium</span><span class="p">:</span>
+</div><div class='line'>                            <span class="k">return</span> <span class="k">new</span> <span class="nf">PremiumDataService</span><span class="p">();</span>
+</div><div class='line'>                        <span class="k">case</span> <span class="n">RoleName</span><span class="p">.</span><span class="n">Normal</span><span class="p">:</span>
+</div><div class='line'>                            <span class="k">return</span> <span class="k">new</span> <span class="nf">NormalDataService</span><span class="p">();</span>
+</div><div class='line'>                        <span class="k">default</span><span class="p">:</span>
+</div><div class='line'>                            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">();</span>
+</div><div class='line'>                    <span class="p">}</span>
+</div><div class='line'>                <span class="p">};</span>
+</div><div class='line'>            <span class="p">});</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>The above implementation is viable, however, notice that:</p>
+
+<ol>
+<li><p>We are using <code>new</code> in creating our services, this is not a best practice in Dependency Injection. Especially when our services may have it&rsquo;s own dependency.</p></li>
+<li><p>We can use a more elegant way in Autfac to identify our services using <code>Keyed Registration</code></p></li>
+</ol>
+
+
+<h2>using Keyed Registration for our factory (Second version)</h2>
+
+<p>Below is our second version for the registration of our services using <code>Keyed Registration</code> in Autofac.
+Note that in this version, we are also registering our services into Autofac.
+Therefore if our services have other dependencies, Autofac will also help us to resolve them automatically.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">RegisterType</span><span class="p">&lt;</span><span class="n">PremiumDataService</span><span class="p">&gt;()</span>
+</div><div class='line'>                <span class="p">.</span><span class="n">As</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;().</span><span class="n">Keyed</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;(</span><span class="n">RoleName</span><span class="p">.</span><span class="n">Premium</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">RegisterType</span><span class="p">&lt;</span><span class="n">NormalDataService</span><span class="p">&gt;()</span>
+</div><div class='line'>                <span class="p">.</span><span class="n">As</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;().</span><span class="n">Keyed</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;(</span><span class="n">RoleName</span><span class="p">.</span><span class="n">Normal</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="kt">var</span> <span class="n">componentContext</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="n">Resolve</span><span class="p">&lt;</span><span class="n">IComponentContext</span><span class="p">&gt;();</span>
+</div><div class='line'>                <span class="k">return</span> <span class="p">(</span><span class="n">roleName</span><span class="p">)</span> <span class="p">=&gt;</span>
+</div><div class='line'>                <span class="p">{</span>
+</div><div class='line'>                    <span class="kt">var</span> <span class="n">dataService</span> <span class="p">=</span> <span class="n">componentContext</span><span class="p">.</span><span class="n">ResolveKeyed</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;(</span><span class="n">roleName</span><span class="p">);</span>
+</div><div class='line'>                    <span class="k">return</span> <span class="n">dataService</span><span class="p">;</span>
+</div><div class='line'>                <span class="p">};</span>
+</div><div class='line'>            <span class="p">});</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+    </div>
+  </div>
+
+
+
+  <footer>
+    <hr>
+    
+    <div class="row-fluid">
+      
+      <div class="span6">
+        <p class="meta">
+        
+        
+
+
+
+  <a href="/blog/categories/autofac/"><span class="badge">autofac</span></a>
+
+  <a href="/blog/categories/dependency-injection/"><span class="badge">dependency injection</span></a>
+
+
+
+
+        </p>
+      </div>
+      
+      <div class="span6 social-sharing">
+        <div class="sharing">
+  <div class="addthis_toolbox addthis_default_style ">
+  
+  
+  <a class="addthis_button_tweet"></a>
+  
+  
+  <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+      </div>
+      
+      
+    </div>
+    
+    <div class="row-fluid">
+      <div class="span12">
+        <p class="meta">
+          
+            <a class="basic-alignment left" href="/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5/" title="Previous Post: Authentication logics from ASP.NET MVC 4 to 5">&laquo; Authentication logics from ASP.NET MVC 4 to 5</a>
+          
+          
+        </p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+
+
+        </div>
+      </div>
+      <div class="row-fluid">
+        <footer class="footer-page" role="contentinfo">
+          <p>
+  Copyright &copy; 2014 - Benedict Chan -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> - Theme by <a href="http://alexgaribay.com">Alex Garibay</a>
+</p>
+
+
+        </footer>
+      </div>
+  </div>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'benedictchan';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/';
+        var disqus_url = 'http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

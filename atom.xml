@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-04-16T14:37:57+10:00</updated>
+  <updated>2014-08-22T17:47:15+10:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,121 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Resolving implementations at runtime using Autofac]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/"/>
+    <updated>2014-08-13T20:02:01+10:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac</id>
+    <content type="html"><![CDATA[<p>There are lots of ways on resolving your services and implementations at runtime in Autofac. Following is a simple example to demonstrate how we can do it.</p>
+
+<p>Assumng we have a simple interface <code>IDataService</code> that will provide us some data.</p>
+
+<figure class='code'><figcaption>IDataService.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">interface</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="kt">string</span> <span class="nf">GetData</span><span class="p">();</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>We are consuming this service and will return our users the data based on their <code>Role</code>, there are two roles in this example.
+And we are providing different implementation for the <code>IDataService</code> for each role.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">enum</span> <span class="n">RoleName</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="n">Premium</span><span class="p">,</span>
+</div><div class='line'>        <span class="n">Normal</span>
+</div><div class='line'>    <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">PremiumDataService</span> <span class="p">:</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="p">....</span>
+</div><div class='line'>    <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">NormalDataService</span> <span class="p">:</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="p">....</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>Simple Solution using Func&lt;> as our factory in Autofac</h2>
+
+<p>We will use a simple function <code>Func&lt;RoleName, IDataService&gt;</code> as our dependency in our <code>Controller</code>. It will act as our factory so that we can consume this factory to get our expected data.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;</span> <span class="n">_dataServiceFactory</span><span class="p">;</span>
+</div><div class='line'>        <span class="k">public</span> <span class="nf">HomeController</span><span class="p">(</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;</span> <span class="n">dataServiceFactory</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_dataServiceFactory</span> <span class="p">=</span> <span class="n">dataServiceFactory</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">public</span> <span class="n">ActionResult</span> <span class="nf">GetData</span><span class="p">()</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="p">....</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">dataService</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_dataServiceFactory</span><span class="p">(</span><span class="n">roleType</span><span class="p">);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">dataService</span><span class="p">.</span><span class="n">GetData</span><span class="p">();</span>
+</div><div class='line'>            <span class="p">....</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<h2>Autofac registration for Func&lt;> (First version)</h2>
+
+<p>To config this <code>Func&lt;RoleName, IDataService&gt;</code> in Autofac, we can simple do this:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="k">return</span> <span class="p">(</span><span class="n">roleName</span><span class="p">)</span> <span class="p">=&gt;</span>
+</div><div class='line'>                <span class="p">{</span>
+</div><div class='line'>                    <span class="k">switch</span> <span class="p">(</span><span class="n">roleName</span><span class="p">)</span>
+</div><div class='line'>                    <span class="p">{</span>
+</div><div class='line'>                        <span class="k">case</span> <span class="n">RoleName</span><span class="p">.</span><span class="n">Premium</span><span class="p">:</span>
+</div><div class='line'>                            <span class="k">return</span> <span class="k">new</span> <span class="nf">PremiumDataService</span><span class="p">();</span>
+</div><div class='line'>                        <span class="k">case</span> <span class="n">RoleName</span><span class="p">.</span><span class="n">Normal</span><span class="p">:</span>
+</div><div class='line'>                            <span class="k">return</span> <span class="k">new</span> <span class="nf">NormalDataService</span><span class="p">();</span>
+</div><div class='line'>                        <span class="k">default</span><span class="p">:</span>
+</div><div class='line'>                            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">();</span>
+</div><div class='line'>                    <span class="p">}</span>
+</div><div class='line'>                <span class="p">};</span>
+</div><div class='line'>            <span class="p">});</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>The above implementation is viable, however, notice that:</p>
+
+<ol>
+<li><p>We are using <code>new</code> in creating our services, this is not a best practice in Dependency Injection. Especially when our services may have it&rsquo;s own dependency.</p></li>
+<li><p>We can use a more elegant way in Autfac to identify our services using <code>Keyed Registration</code></p></li>
+</ol>
+
+
+<h2>using Keyed Registration for our factory (Second version)</h2>
+
+<p>Below is our second version for the registration of our services using <code>Keyed Registration</code> in Autofac.
+Note that in this version, we are also registering our services into Autofac.
+Therefore if our services have other dependencies, Autofac will also help us to resolve them automatically.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">RegisterType</span><span class="p">&lt;</span><span class="n">PremiumDataService</span><span class="p">&gt;()</span>
+</div><div class='line'>                <span class="p">.</span><span class="n">As</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;().</span><span class="n">Keyed</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;(</span><span class="n">RoleName</span><span class="p">.</span><span class="n">Premium</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">RegisterType</span><span class="p">&lt;</span><span class="n">NormalDataService</span><span class="p">&gt;()</span>
+</div><div class='line'>                <span class="p">.</span><span class="n">As</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;().</span><span class="n">Keyed</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;(</span><span class="n">RoleName</span><span class="p">.</span><span class="n">Normal</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>            <span class="n">builder</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span>
+</div><div class='line'>            <span class="p">{</span>
+</div><div class='line'>                <span class="kt">var</span> <span class="n">componentContext</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="n">Resolve</span><span class="p">&lt;</span><span class="n">IComponentContext</span><span class="p">&gt;();</span>
+</div><div class='line'>                <span class="k">return</span> <span class="p">(</span><span class="n">roleName</span><span class="p">)</span> <span class="p">=&gt;</span>
+</div><div class='line'>                <span class="p">{</span>
+</div><div class='line'>                    <span class="kt">var</span> <span class="n">dataService</span> <span class="p">=</span> <span class="n">componentContext</span><span class="p">.</span><span class="n">ResolveKeyed</span><span class="p">&lt;</span><span class="n">IDataService</span><span class="p">&gt;(</span><span class="n">roleName</span><span class="p">);</span>
+</div><div class='line'>                    <span class="k">return</span> <span class="n">dataService</span><span class="p">;</span>
+</div><div class='line'>                <span class="p">};</span>
+</div><div class='line'>            <span class="p">});</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Authentication logics from ASP.NET MVC 4 to 5]]></title>

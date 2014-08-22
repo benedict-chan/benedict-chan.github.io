@@ -118,6 +118,104 @@
   
 
 
+<i class="icon-calendar-empty"></i> <time datetime="2014-08-13T20:02:01+10:00" pubdate data-updated="true">Aug 13<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          <a href="/blog/categories/autofac/"><span class="badge">autofac</span></a>
+          
+          <a href="/blog/categories/dependency-injection/"><span class="badge">dependency injection</span></a>
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/">Resolving implementations at runtime using Autofac</a></h1>
+      <p>There are lots of ways on resolving your services and implementations at runtime in Autofac. Following is a simple example to demonstrate how we can do it.</p>
+
+<p>Assumng we have a simple interface <code>IDataService</code> that will provide us some data.</p>
+
+<figure class='code'><figcaption>IDataService.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">interface</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="kt">string</span> <span class="nf">GetData</span><span class="p">();</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>We are consuming this service and will return our users the data based on their <code>Role</code>, there are two roles in this example.
+And we are providing different implementation for the <code>IDataService</code> for each role.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">enum</span> <span class="n">RoleName</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="n">Premium</span><span class="p">,</span>
+</div><div class='line'>        <span class="n">Normal</span>
+</div><div class='line'>    <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">PremiumDataService</span> <span class="p">:</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="p">....</span>
+</div><div class='line'>    <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">NormalDataService</span> <span class="p">:</span> <span class="n">IDataService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="p">....</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h2>Simple Solution using Func&lt;> as our factory in Autofac</h2>
+
+<p>We will use a simple function <code>Func&lt;RoleName, IDataService&gt;</code> as our dependency in our <code>Controller</code>. It will act as our factory so that we can consume this factory to get our expected data.</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;</span> <span class="n">_dataServiceFactory</span><span class="p">;</span>
+</div><div class='line'>        <span class="k">public</span> <span class="nf">HomeController</span><span class="p">(</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">RoleName</span><span class="p">,</span> <span class="n">IDataService</span><span class="p">&gt;</span> <span class="n">dataServiceFactory</span><span class="p">)</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_dataServiceFactory</span> <span class="p">=</span> <span class="n">dataServiceFactory</span><span class="p">;</span>
+</div><div class='line'>        <span class="p">}</span>
+</div><div class='line'> </div><div class='line'>        <span class="k">public</span> <span class="n">ActionResult</span> <span class="nf">GetData</span><span class="p">()</span>
+</div><div class='line'>        <span class="p">{</span>
+</div><div class='line'>            <span class="p">....</span>
+</div><div class='line'> </div><div class='line'>            <span class="kt">var</span> <span class="n">dataService</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_dataServiceFactory</span><span class="p">(</span><span class="n">roleType</span><span class="p">);</span>
+</div><div class='line'>            <span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">dataService</span><span class="p">.</span><span class="n">GetData</span><span class="p">();</span>
+</div><div class='line'>            <span class="p">....</span>
+</div><div class='line'>        <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+
+      
+       <a href="/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/">Read on &rarr;</a> 
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
 <i class="icon-calendar-empty"></i> <time datetime="2014-03-28T16:14:24+11:00" pubdate data-updated="true">Mar 28<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           

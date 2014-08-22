@@ -4,7 +4,7 @@
   <title><![CDATA[Category: dependency injection | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/dependency-injection/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-04-16T14:37:57+10:00</updated>
+  <updated>2014-08-22T17:47:15+10:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,148 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Resolving implementations at runtime using Autofac]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/"/>
+    <updated>2014-08-13T20:02:01+10:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac</id>
+    <content type="html"><![CDATA[<p>There are lots of ways on resolving your services and implementations at runtime in Autofac. Following is a simple example to demonstrate how we can do it.</p>
+
+<p>Assumng we have a simple interface <code>IDataService</code> that will provide us some data.</p>
+
+<p>
+``` cs IDataService.cs</p>
+
+<pre><code>public interface IDataService
+{
+    string GetData();
+}
+</code></pre>
+
+<p>```
+</p>
+
+<p>We are consuming this service and will return our users the data based on their <code>Role</code>, there are two roles in this example.
+And we are providing different implementation for the <code>IDataService</code> for each role.</p>
+
+<p>
+``` cs</p>
+
+<pre><code>public enum RoleName
+{
+    Premium,
+    Normal
+}
+
+public class PremiumDataService : IDataService
+{
+    ....
+}
+
+public class NormalDataService : IDataService
+{
+    ....
+}
+</code></pre>
+
+<p>```
+</p>
+
+<h2>Simple Solution using Func&lt;> as our factory in Autofac</h2>
+
+<p>We will use a simple function <code>Func&lt;RoleName, IDataService&gt;</code> as our dependency in our <code>Controller</code>. It will act as our factory so that we can consume this factory to get our expected data.</p>
+
+<p>
+``` cs</p>
+
+<pre><code>    private readonly Func&lt;RoleName, IDataService&gt; _dataServiceFactory;
+    public HomeController(Func&lt;RoleName, IDataService&gt; dataServiceFactory)
+    {
+        this._dataServiceFactory = dataServiceFactory;
+    }
+
+    public ActionResult GetData()
+    {
+        ....
+
+        var dataService = this._dataServiceFactory(roleType);
+        var data = dataService.GetData();
+        ....
+    }
+</code></pre>
+
+<p>```
+</p>
+
+<!-- more -->
+
+
+<h2>Autofac registration for Func&lt;> (First version)</h2>
+
+<p>To config this <code>Func&lt;RoleName, IDataService&gt;</code> in Autofac, we can simple do this:</p>
+
+<p>
+``` cs</p>
+
+<pre><code>        builder.Register&lt;Func&lt;RoleName, IDataService&gt;&gt;(c =&gt;
+        {
+            return (roleName) =&gt;
+            {
+                switch (roleName)
+                {
+                    case RoleName.Premium:
+                        return new PremiumDataService();
+                    case RoleName.Normal:
+                        return new NormalDataService();
+                    default:
+                        throw new ArgumentException();
+                }
+            };
+        });
+</code></pre>
+
+<p>```
+</p>
+
+<p>The above implementation is viable, however, notice that:</p>
+
+<ol>
+<li><p>We are using <code>new</code> in creating our services, this is not a best practice in Dependency Injection. Especially when our services may have it&rsquo;s own dependency.</p></li>
+<li><p>We can use a more elegant way in Autfac to identify our services using <code>Keyed Registration</code></p></li>
+</ol>
+
+
+<h2>using Keyed Registration for our factory (Second version)</h2>
+
+<p>Below is our second version for the registration of our services using <code>Keyed Registration</code> in Autofac.
+Note that in this version, we are also registering our services into Autofac.
+Therefore if our services have other dependencies, Autofac will also help us to resolve them automatically.</p>
+
+<p>
+``` cs</p>
+
+<pre><code>        builder.RegisterType&lt;PremiumDataService&gt;()
+            .As&lt;IDataService&gt;().Keyed&lt;IDataService&gt;(RoleName.Premium);
+
+        builder.RegisterType&lt;NormalDataService&gt;()
+            .As&lt;IDataService&gt;().Keyed&lt;IDataService&gt;(RoleName.Normal);
+
+        builder.Register&lt;Func&lt;RoleName, IDataService&gt;&gt;(c =&gt;
+        {
+            var componentContext = c.Resolve&lt;IComponentContext&gt;();
+            return (roleName) =&gt;
+            {
+                var dataService = componentContext.ResolveKeyed&lt;IDataService&gt;(roleName);
+                return dataService;
+            };
+        });
+</code></pre>
+
+<p>```
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Adding Email Templates service in your ASP.NET MVC projects using IoC]]></title>
