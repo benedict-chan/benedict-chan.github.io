@@ -118,6 +118,153 @@
   
 
 
+<i class="icon-calendar-empty"></i> <time datetime="2014-11-17T16:13:22+11:00" pubdate data-updated="true">Nov 17<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          <a href="/blog/categories/data/"><span class="badge">data</span></a>
+          
+          <a href="/blog/categories/sql/"><span class="badge">sql</span></a>
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/11/17/exporting-data-to-csv-in-sql-server/">Exporting data to CSV in SQL Server using bcp</a></h1>
+      <p>There are several ways to export data in SQL Server, in this post, I am using <code>bcp</code> with <code>xp_cmdshell</code>.</p>
+
+<p>We will first create a simple select statement to test whether we can export our data, then we will use a stored procedure to handle complex queries. Finally we will try to add variables to our script so that we can make this export script to be run in SQL Server Agent as a scheduled task.</p>
+
+<h3>Test the export with a simple select statement</h3>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="k">exec</span> <span class="n">master</span><span class="p">..</span><span class="n">xp_cmdshell</span> <span class="s1">&#39;bcp &quot;select * from DataSeries&quot; queryout &quot;C:\Export\dataseries.csv&quot; -c -t&quot;,&quot; -r&quot;\n&quot; -T&#39;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>However, you will receive an error of:
+[SQL Server]Invalid object name &lsquo;Table&rsquo;.</p>
+
+<p>So, in order to run this simple query, we actually need to tell SQL Server the full name of our table schema, which should be:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="k">exec</span> <span class="n">master</span><span class="p">..</span><span class="n">xp_cmdshell</span> <span class="s1">&#39;bcp &quot;select * from [db_name].[dbo].[DataSeries]&quot; queryout &quot;C:\Export\dataseries.csv&quot; -c -t&quot;,&quot; -r&quot;\n&quot; -T&#39;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h3>Complex Query, use stored procedure</h3>
+
+
+      
+       <a href="/blog/2014/11/17/exporting-data-to-csv-in-sql-server/">Read on &rarr;</a> 
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
+<i class="icon-calendar-empty"></i> <time datetime="2014-11-07T16:33:14+11:00" pubdate data-updated="true">Nov 7<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          <a href="/blog/categories/anaconda/"><span class="badge">anaconda</span></a>
+          
+          <a href="/blog/categories/python/"><span class="badge">python</span></a>
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/11/07/setup-python-environment-in-visual-studio/">Setup Python (Anaconda) Environment in Visual Studio</a></h1>
+      <h2>Installing Python (Anaconda)</h2>
+
+<p>In the old days, setting up an python environment with packages like NumPy SciPy in Windows may takes several hours. This may include building NumPy or SciPy yourself.</p>
+
+<p>Now, to save our day, we can actually just install them easily by some special distributions like:</p>
+
+<ul>
+<li><a href="http://enthought.com/" target="_blank">EPD Free Enthought Python Distribution</a></li>
+<li><a href="http://continuum.io/" target="_blank">Anaconda Python</a></li>
+</ul>
+
+
+<p>Here, I am going to install Anaconda, simply download the Windows installer and you are done.</p>
+
+<h2>Setup Visual Studio as your Python IDE</h2>
+
+<p>To use Visual Studio as your Python IDE, we can install the <a href="http://pytools.codeplex.com/" target="_blank" >Python Tools for Visual Studio (PTVS)</a>.</p>
+
+<h2>Setup Python Environment &ndash; Anaconda</h2>
+
+<p>Now that we have installed (PTVS), we have to tell (PTVS) where to find our Python distributions, in this case, the one that Anaconda installed.
+We can configu it from:</p>
+
+<p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Environment Options</p>
+
+<p>We can setup our new Anaconda environment like this:</p>
+
+<p><img class="center" src="/images/posts/2014-11-07-PythonEnvironmentOptions.jpg" title="" ></p>
+
+<p>Once are have finished our setup, we can create a Python Project in Visual Studio, then try to run it our script using :</p>
+
+<p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Execute Project in Python Interactive</p>
+
+      
+      
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
 <i class="icon-calendar-empty"></i> <time datetime="2014-08-13T20:02:01+10:00" pubdate data-updated="true">Aug 13<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           
@@ -782,77 +929,10 @@ After a google search, seems it is quite easy to setup.</p>
 
     </article>
     
-    <hr>
-    
-  
-  
-    <article>
-      
-
-  <div class="row-fluid">
-    <div class="span2 post-meta">
-	  <h5 class="date-time">
-
-
-
-
-
-
-
-
-  
-
-
-<i class="icon-calendar-empty"></i> <time datetime="2014-01-28T14:11:37+11:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time></h5>
-          <div class="row-fluid">
-          
-          </div>
-          
-          <div class="row-fluid">
-          
-          <a href="/blog/categories/octopress/"><span class="badge">Octopress</span></a>
-          
-          </div>
-          
-    </div>
-    <div class="span10 post-container">
-      <h1 class="link"><a href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/">Setup Octopress with Github pages in Windows</a></h1>
-      <h2>Software</h2>
-
-<ol>
-<li>Install <a href="http://git-scm.com/">Git</a>, <a href="http://windows.github.com">GitHub for Windows</a></li>
-<li>Install <a href="http://rubyinstaller.org/downloads/">Ruby Installer for Windows</a></li>
-<li>Install <a href="https://github.com/oneclick/rubyinstaller/downloads/">Ruby Development Kit</a>
-, extract this to a folder like <code>C:\RubyDevKit</code></li>
-</ol>
-
-
-<h2>Setup Ruby</h2>
-
-<pre><code>cd C:\RubyDevKit
-ruby dk.rb init
-ruby dk.rb install
-</code></pre>
-
-<h2>Setup Octopress</h2>
-
-<h4>Go to your source folder and clone Octopress</h4>
-
-<pre><code>git clone git://github.com/imathis/octopress.git username
-</code></pre>
-
-
-      
-       <a href="/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/">Read on &rarr;</a> 
-    </div>
-  </div>
-
-
-
-    </article>
-    
   
   <div class="pagination">
+    
+    <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
 
     

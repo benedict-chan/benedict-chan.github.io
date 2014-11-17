@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: sql | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/sql/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-11-17T17:57:39+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Exporting data to CSV in SQL Server using bcp]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server/"/>
+    <updated>2014-11-17T16:13:22+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server</id>
+    <content type="html"><![CDATA[<p>There are several ways to export data in SQL Server, in this post, I am using <code>bcp</code> with <code>xp_cmdshell</code>.</p>
+
+<p>We will first create a simple select statement to test whether we can export our data, then we will use a stored procedure to handle complex queries. Finally we will try to add variables to our script so that we can make this export script to be run in SQL Server Agent as a scheduled task.</p>
+
+<h3>Test the export with a simple select statement</h3>
+
+<p>
+<code>sql
+exec master..xp_cmdshell 'bcp "select * from DataSeries" queryout "C:\Export\dataseries.csv" -c -t"," -r"\n" -T'
+</code>
+</p>
+
+<p>However, you will receive an error of:
+[SQL Server]Invalid object name &lsquo;Table&rsquo;.</p>
+
+<p>So, in order to run this simple query, we actually need to tell SQL Server the full name of our table schema, which should be:</p>
+
+<p>
+<code>sql
+exec master..xp_cmdshell 'bcp "select * from [db_name].[dbo].[DataSeries]" queryout "C:\Export\dataseries.csv" -c -t"," -r"\n" -T'
+</code>
+</p>
+
+<h3>Complex Query, use stored procedure</h3>
+
+<!-- more -->
+
+
+<p>For a complex query, we should store our query in a Stored Procedure, for example if we have a stored procedure name <code>ExportDataSeries</code> with two <code>DateTime</code> input parameters, we can change our script to:</p>
+
+<p>
+`&ldquo; sql
+exec master..xp_cmdshell &lsquo;bcp &ldquo;exec [db_name].[dbo].[ExportDataSeries] &rdquo;2014-11-17'&lsquo;, &rsquo;&lsquo;2014-11-24&rsquo;&lsquo; &ldquo; queryout "C:\Export\dataseries.csv&rdquo; -c -t",&ldquo; -r&rdquo;\n" -T&rsquo;</p>
+
+<p>```
+</p>
+
+<h3>Refactor and apply variables for the query</h3>
+
+<p>Now that we have worked out our stored procedure, let&rsquo;s try to refactor our script by injecting some variables, such that we can use this in SQL Server Agent for repeated task. In this case, let&rsquo;s assume this is a daily schedule which will export data to a CSV file everyday.</p>
+
+<p>The final script looks like this:</p>
+
+<p>
+``` sql
+&mdash; DECLARE variables for the DateTime parameters
+DECLARE @DayStart DATETIME
+DECLARE @DayEnd DATETIME
+DECLARE @DayStartArg NVARCHAR(50);
+DECLARE @DayEndArg NVARCHAR(50);</p>
+
+<p>SET @DayStart =  CAST(CONVERT(VARCHAR(10), GETDATE(), 110) + &lsquo; 00:00:00&rsquo; AS DATETIME)
+SET @DayEnd =  CAST(CONVERT(VARCHAR(10), GETDATE(), 110) + &lsquo; 23:59:59&rsquo; AS DATETIME)
+SET @DayStartArg = CONVERT(NVARCHAR(20), @DayStart,126);
+SET @DayEndArg = CONVERT(NVARCHAR(20), @DayEnd,126);</p>
+
+<p>&mdash; DECLARE variables for export location
+DECLARE @ExportFolderName NVARCHAR(90);
+DECLARE @ExportFileName NVARCHAR(90);</p>
+
+<p>SET @ExportFolderName = &lsquo;C:\Export\&rsquo;;
+SET @ExportFileName = @ExportFolderName + &lsquo;ExportDataSeries_&rsquo; + RTRIM(CONVERT(NVARCHAR(20), @DayStart,112)) + &lsquo;.csv&rsquo;;</p>
+
+<p>&mdash; DECLARE variables for the execution scripts
+DECLARE @SqlStatement varchar(8000)
+DECLARE @BcpStatement varchar(8000)</p>
+
+<p>SET @SqlStatement = &lsquo;exec [db_name].[dbo].[ExportDataSeries]  &rsquo;&lsquo;&rsquo; + @DayStartArg + &lsquo;&rsquo;&lsquo;, &rsquo;&lsquo;&rsquo; + @DayEndArg + &lsquo;&rsquo;&lsquo;&rsquo;
+SET @BcpStatement = &lsquo;bcp &ldquo;&rsquo; + @SqlStatement + &lsquo;&rdquo; queryout &ldquo;&rsquo; + @ExportFileName + &lsquo;&rdquo; -c -t",&ldquo; -r&rdquo;\n" -T&rsquo;</p>
+
+<p>exec master..xp_cmdshell @BcpStatement</p>
+
+<p>```
+</p>
+
+<p>For your interest, variable <code>@BcpStatement</code> looks like this:</p>
+
+<p>
+``` sql
+bcp &ldquo;exec [db_name].[dbo].[ExportDataSeries]  &lsquo;2014-11-17T00:00:00&rsquo;, &lsquo;2014-11-17T23:59:59&rsquo;&rdquo; queryout &ldquo;C:\Export\ExportDataSeries_20141117.csv&rdquo; -c -t",&ldquo; -r&rdquo;\n" -T</p>
+
+<p>```
+</p>
+]]></content>
+  </entry>
+  
+</feed>

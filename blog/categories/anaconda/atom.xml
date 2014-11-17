@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: anaconda | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/anaconda/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-11-17T17:57:39+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setup Python (Anaconda) Environment in Visual Studio]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/"/>
+    <updated>2014-11-07T16:33:14+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio</id>
+    <content type="html"><![CDATA[<h2>Installing Python (Anaconda)</h2>
+
+<p>In the old days, setting up an python environment with packages like NumPy SciPy in Windows may takes several hours. This may include building NumPy or SciPy yourself.</p>
+
+<p>Now, to save our day, we can actually just install them easily by some special distributions like:</p>
+
+<ul>
+<li><a href="http://enthought.com/" target="_blank">EPD Free Enthought Python Distribution</a></li>
+<li><a href="http://continuum.io/" target="_blank">Anaconda Python</a></li>
+</ul>
+
+
+<p>Here, I am going to install Anaconda, simply download the Windows installer and you are done.</p>
+
+<h2>Setup Visual Studio as your Python IDE</h2>
+
+<p>To use Visual Studio as your Python IDE, we can install the <a href="http://pytools.codeplex.com/" target="_blank" >Python Tools for Visual Studio (PTVS)</a>.</p>
+
+<h2>Setup Python Environment &ndash; Anaconda</h2>
+
+<p>Now that we have installed (PTVS), we have to tell (PTVS) where to find our Python distributions, in this case, the one that Anaconda installed.
+We can configu it from:</p>
+
+<p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Environment Options</p>
+
+<p>We can setup our new Anaconda environment like this:</p>
+
+<p><img class="center" src="/images/posts/2014-11-07-PythonEnvironmentOptions.jpg" title="" ></p>
+
+<p>Once are have finished our setup, we can create a Python Project in Visual Studio, then try to run it our script using :</p>
+
+<p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Execute Project in Python Interactive</p>
+]]></content>
+  </entry>
+  
+</feed>

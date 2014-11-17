@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-08-22T17:47:15+10:00</updated>
+  <updated>2014-11-17T17:57:39+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Exporting data to CSV in SQL Server using bcp]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server/"/>
+    <updated>2014-11-17T16:13:22+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server</id>
+    <content type="html"><![CDATA[<p>There are several ways to export data in SQL Server, in this post, I am using <code>bcp</code> with <code>xp_cmdshell</code>.</p>
+
+<p>We will first create a simple select statement to test whether we can export our data, then we will use a stored procedure to handle complex queries. Finally we will try to add variables to our script so that we can make this export script to be run in SQL Server Agent as a scheduled task.</p>
+
+<h3>Test the export with a simple select statement</h3>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="k">exec</span> <span class="n">master</span><span class="p">..</span><span class="n">xp_cmdshell</span> <span class="s1">&#39;bcp &quot;select * from DataSeries&quot; queryout &quot;C:\Export\dataseries.csv&quot; -c -t&quot;,&quot; -r&quot;\n&quot; -T&#39;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>However, you will receive an error of:
+[SQL Server]Invalid object name &lsquo;Table&rsquo;.</p>
+
+<p>So, in order to run this simple query, we actually need to tell SQL Server the full name of our table schema, which should be:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="k">exec</span> <span class="n">master</span><span class="p">..</span><span class="n">xp_cmdshell</span> <span class="s1">&#39;bcp &quot;select * from [db_name].[dbo].[DataSeries]&quot; queryout &quot;C:\Export\dataseries.csv&quot; -c -t&quot;,&quot; -r&quot;\n&quot; -T&#39;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h3>Complex Query, use stored procedure</h3>
+
+<!-- more -->
+
+
+<p>For a complex query, we should store our query in a Stored Procedure, for example if we have a stored procedure name <code>ExportDataSeries</code> with two <code>DateTime</code> input parameters, we can change our script to:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="k">exec</span> <span class="n">master</span><span class="p">..</span><span class="n">xp_cmdshell</span> <span class="s1">&#39;bcp &quot;exec [db_name].[dbo].[ExportDataSeries] &#39;&#39;2014-11-17&#39;&#39;, &#39;&#39;2014-11-24&#39;&#39; &quot; queryout &quot;C:\Export\dataseries.csv&quot; -c -t&quot;,&quot; -r&quot;\n&quot; -T&#39;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<h3>Refactor and apply variables for the query</h3>
+
+<p>Now that we have worked out our stored procedure, let&rsquo;s try to refactor our script by injecting some variables, such that we can use this in SQL Server Agent for repeated task. In this case, let&rsquo;s assume this is a daily schedule which will export data to a CSV file everyday.</p>
+
+<p>The final script looks like this:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div><div data-line='25' class='line-number'></div><div data-line='26' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="c1">-- DECLARE variables for the DateTime parameters</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">DayStart</span> <span class="n">DATETIME</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">DayEnd</span> <span class="n">DATETIME</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">DayStartArg</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">DayEndArg</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">DayStart</span> <span class="o">=</span>  <span class="k">CAST</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">110</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; 00:00:00&#39;</span> <span class="k">AS</span> <span class="n">DATETIME</span><span class="p">)</span>
+</div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">DayEnd</span> <span class="o">=</span>  <span class="k">CAST</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">110</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; 23:59:59&#39;</span> <span class="k">AS</span> <span class="n">DATETIME</span><span class="p">)</span>
+</div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">DayStartArg</span> <span class="o">=</span> <span class="k">CONVERT</span><span class="p">(</span><span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="o">@</span><span class="n">DayStart</span><span class="p">,</span><span class="mi">126</span><span class="p">);</span>
+</div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">DayEndArg</span> <span class="o">=</span> <span class="k">CONVERT</span><span class="p">(</span><span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="o">@</span><span class="n">DayEnd</span><span class="p">,</span><span class="mi">126</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'><span class="c1">-- DECLARE variables for export location</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">ExportFolderName</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">90</span><span class="p">);</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">ExportFileName</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">90</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">ExportFolderName</span> <span class="o">=</span> <span class="s1">&#39;C:\Export\&#39;</span><span class="p">;</span>
+</div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">ExportFileName</span> <span class="o">=</span> <span class="o">@</span><span class="n">ExportFolderName</span> <span class="o">+</span> <span class="s1">&#39;ExportDataSeries_&#39;</span> <span class="o">+</span> <span class="n">RTRIM</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="o">@</span><span class="n">DayStart</span><span class="p">,</span><span class="mi">112</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'><span class="c1">-- DECLARE variables for the execution scripts</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">SqlStatement</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">8000</span><span class="p">)</span>
+</div><div class='line'><span class="k">DECLARE</span> <span class="o">@</span><span class="n">BcpStatement</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">8000</span><span class="p">)</span>
+</div><div class='line'> </div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">SqlStatement</span> <span class="o">=</span> <span class="s1">&#39;exec [db_name].[dbo].[ExportDataSeries]  &#39;&#39;&#39;</span> <span class="o">+</span> <span class="o">@</span><span class="n">DayStartArg</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;, &#39;&#39;&#39;</span> <span class="o">+</span> <span class="o">@</span><span class="n">DayEndArg</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;&#39;</span>
+</div><div class='line'><span class="k">SET</span> <span class="o">@</span><span class="n">BcpStatement</span> <span class="o">=</span> <span class="s1">&#39;bcp &quot;&#39;</span> <span class="o">+</span> <span class="o">@</span><span class="n">SqlStatement</span> <span class="o">+</span> <span class="s1">&#39;&quot; queryout &quot;&#39;</span> <span class="o">+</span> <span class="o">@</span><span class="n">ExportFileName</span> <span class="o">+</span> <span class="s1">&#39;&quot; -c -t&quot;,&quot; -r&quot;\n&quot; -T&#39;</span>
+</div><div class='line'> </div><div class='line'><span class="k">exec</span> <span class="n">master</span><span class="p">..</span><span class="n">xp_cmdshell</span> <span class="o">@</span><span class="n">BcpStatement</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>For your interest, variable <code>@BcpStatement</code> looks like this:</p>
+
+<figure class='code'><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div></pre></td><td class='main  sql'><pre><div class='line'><span class="n">bcp</span> <span class="ss">&quot;exec [db_name].[dbo].[ExportDataSeries]  &#39;2014-11-17T00:00:00&#39;, &#39;2014-11-17T23:59:59&#39;&quot;</span> <span class="n">queryout</span> <span class="ss">&quot;C:\Export\ExportDataSeries_20141117.csv&quot;</span> <span class="o">-</span><span class="k">c</span> <span class="o">-</span><span class="n">t</span><span class="ss">&quot;,&quot;</span> <span class="o">-</span><span class="n">r</span><span class="ss">&quot;\n&quot;</span> <span class="o">-</span><span class="n">T</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Setup Python (Anaconda) Environment in Visual Studio]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/"/>
+    <updated>2014-11-07T16:33:14+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio</id>
+    <content type="html"><![CDATA[<h2>Installing Python (Anaconda)</h2>
+
+<p>In the old days, setting up an python environment with packages like NumPy SciPy in Windows may takes several hours. This may include building NumPy or SciPy yourself.</p>
+
+<p>Now, to save our day, we can actually just install them easily by some special distributions like:</p>
+
+<ul>
+<li><a href="http://enthought.com/" target="_blank">EPD Free Enthought Python Distribution</a></li>
+<li><a href="http://continuum.io/" target="_blank">Anaconda Python</a></li>
+</ul>
+
+
+<p>Here, I am going to install Anaconda, simply download the Windows installer and you are done.</p>
+
+<h2>Setup Visual Studio as your Python IDE</h2>
+
+<p>To use Visual Studio as your Python IDE, we can install the <a href="http://pytools.codeplex.com/" target="_blank" >Python Tools for Visual Studio (PTVS)</a>.</p>
+
+<h2>Setup Python Environment &ndash; Anaconda</h2>
+
+<p>Now that we have installed (PTVS), we have to tell (PTVS) where to find our Python distributions, in this case, the one that Anaconda installed.
+We can configu it from:</p>
+
+<p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Environment Options</p>
+
+<p>We can setup our new Anaconda environment like this:</p>
+
+<p><img class="center" src="http://benedict-chan.github.io/images/posts/2014-11-07-PythonEnvironmentOptions.jpg" title="" ></p>
+
+<p>Once are have finished our setup, we can create a Python Project in Visual Studio, then try to run it our script using :</p>
+
+<p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Execute Project in Python Interactive</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Resolving implementations at runtime using Autofac]]></title>
