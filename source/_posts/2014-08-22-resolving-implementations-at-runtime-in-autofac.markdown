@@ -2,7 +2,7 @@
 layout: post
 title: "Resolving implementations at runtime using Autofac"
 date: 2014-08-13 20:02:01 +1000
-comments: true
+comments: false
 categories: ["autofac", "dependency injection"]
 description:
 keywords: "resolve runtime implementations, dependency injection, factory, func<>, Dynamic instantiation"
