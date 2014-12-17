@@ -118,6 +118,70 @@
   
 
 
+<i class="icon-calendar-empty"></i> <time datetime="2014-12-11T11:33:44+11:00" pubdate data-updated="true">Dec 11<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          <a href="/blog/categories/ipython-notebook/"><span class="badge">ipython notebook</span></a>
+          
+          <a href="/blog/categories/pandas/"><span class="badge">pandas</span></a>
+          
+          <a href="/blog/categories/python/"><span class="badge">python</span></a>
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/12/11/a-taste-in-pandas/">A taste in Pandas, ipython notebook</a></h1>
+      <p>After setting up the python enviornment in the
+<a href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/">previous post</a>. I am going to run some python scripts to test our enviornment.</p>
+
+<h3>The exercise</h3>
+
+<p>The example is actually some exercises provided by the following link:
+<a href="http://nbviewer.ipython.org/urls/raw.github.com/nborwankar/LearnDataScience/master/notebooks/A2.%20Linear%20Regression%20-%20Data%20Exploration%20-%20Lending%20Club.ipynb" target="_blank">A2. Linear Regression &ndash; Data Exploration &ndash; Lending Club</a>, which is part of the page <a href="https://github.com/nborwankar/LearnDataScience" target="_blank">Learn Data Science</a>.</p>
+
+<p>The exercise includes:
+&ndash; Reading a sample csv data into <code>pandas</code>
+&ndash; Removing % signs from rates
+&ndash; Removing the word &ldquo;months&rdquo; from loan length.
+&ndash; Managing outliers, remove such rows in this case</p>
+
+<p>I have implemented them as an <code>ipython notebook</code> and it can be previewed <a href="http://nbviewer.ipython.org/github/benedict-chan/pytest/blob/master/LearnDataScience/a2-linear-regression.ipynb" target="_blank" >here</a>.</p>
+
+      
+      
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
 <i class="icon-calendar-empty"></i> <time datetime="2014-11-17T16:13:22+11:00" pubdate data-updated="true">Nov 17<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           
@@ -856,72 +920,6 @@ We are going to create an ASP.NET MVC action as a JSON API to authenticate a mob
 
       
        <a href="/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">Read on &rarr;</a> 
-    </div>
-  </div>
-
-
-
-    </article>
-    
-    <hr>
-    
-  
-  
-    <article>
-      
-
-  <div class="row-fluid">
-    <div class="span2 post-meta">
-	  <h5 class="date-time">
-
-
-
-
-
-
-
-
-  
-
-
-<i class="icon-calendar-empty"></i> <time datetime="2014-01-29T10:34:19+11:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time></h5>
-          <div class="row-fluid">
-          
-          </div>
-          
-          <div class="row-fluid">
-          
-          <a href="/blog/categories/octopress/"><span class="badge">Octopress</span></a>
-          
-          <a href="/blog/categories/seo/"><span class="badge">SEO</span></a>
-          
-          </div>
-          
-    </div>
-    <div class="span10 post-container">
-      <h1 class="link"><a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Adding simple SEO for octopress</a></h1>
-      <h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
-
-<p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
-After a google search, seems it is quite easy to setup.</p>
-
-<h2>The main Octopress Site</h2>
-
-<h5>Description</h5>
-
-<p>Meta tag <code>Description</code> is aleady in config file <code>_config.yml</code>. However, to show it in the main site. You have to modify the file <code>source/_includes/head.html</code>.</p>
-
-<figure class='code'><figcaption>source/_includes/head.html</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='10' class='line-number marked start'></div><div data-line='11' class='line-number marked end'></div><div data-line='12' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line marked start'><span class="o">-</span><span class="p">{</span><span class="o">%</span> <span class="n">capture</span> <span class="n">description</span> <span class="sx">%}&#x7b;&#x25; if page.description %}</span><span class="p">&#x7b;&#x7b;</span> <span class="n">page</span><span class="o">.</span><span class="n">description</span> <span class="p">}}{</span><span class="o">%</span> <span class="k">else</span> <span class="sx">%}&#x7b;&#x7b; content | raw_content }</span><span class="p">}{</span><span class="o">%</span> <span class="n">endif</span> <span class="sx">%}&#x7b;&#x25; endcapture %}</span>
-</div><div class='line marked end'><span class="o">+</span><span class="p">{</span><span class="o">%</span> <span class="n">capture</span> <span class="n">description</span> <span class="sx">%}&#x7b;&#x25; if page.description %}</span><span class="p">&#x7b;&#x7b;</span> <span class="n">page</span><span class="o">.</span><span class="n">description</span> <span class="p">}}{</span><span class="o">%</span> <span class="k">elsif</span> <span class="n">site</span><span class="o">.</span><span class="n">description</span> <span class="sx">%}&#x7b;&#x7b; site.description }</span><span class="p">}{</span><span class="o">%</span> <span class="k">else</span> <span class="sx">%}&#x7b;&#x7b; content | raw_content }</span><span class="p">}{</span><span class="o">%</span> <span class="n">endif</span> <span class="sx">%}&#x7b;&#x25; endcapture %}</span>
-</div><div class='line'><span class="o">&lt;</span><span class="n">meta</span> <span class="nb">name</span><span class="o">=</span><span class="s2">&quot;description&quot;</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&#x7b;&#x7b; description | strip_html | condense_spaces | truncate:150 }}&quot;</span><span class="o">&gt;</span>
-</div></pre></td></tr></table></div></figure>
-
-
-
-
-
-      
-       <a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Read on &rarr;</a> 
     </div>
   </div>
 

@@ -118,6 +118,72 @@
   
 
 
+<i class="icon-calendar-empty"></i> <time datetime="2014-01-29T10:34:19+11:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          <a href="/blog/categories/octopress/"><span class="badge">Octopress</span></a>
+          
+          <a href="/blog/categories/seo/"><span class="badge">SEO</span></a>
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Adding simple SEO for octopress</a></h1>
+      <h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
+
+<p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
+After a google search, seems it is quite easy to setup.</p>
+
+<h2>The main Octopress Site</h2>
+
+<h5>Description</h5>
+
+<p>Meta tag <code>Description</code> is aleady in config file <code>_config.yml</code>. However, to show it in the main site. You have to modify the file <code>source/_includes/head.html</code>.</p>
+
+<figure class='code'><figcaption>source/_includes/head.html</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='10' class='line-number marked start'></div><div data-line='11' class='line-number marked end'></div><div data-line='12' class='line-number'></div></pre></td><td class='main  rb'><pre><div class='line marked start'><span class="o">-</span><span class="p">{</span><span class="o">%</span> <span class="n">capture</span> <span class="n">description</span> <span class="sx">%}&#x7b;&#x25; if page.description %}</span><span class="p">&#x7b;&#x7b;</span> <span class="n">page</span><span class="o">.</span><span class="n">description</span> <span class="p">}}{</span><span class="o">%</span> <span class="k">else</span> <span class="sx">%}&#x7b;&#x7b; content | raw_content }</span><span class="p">}{</span><span class="o">%</span> <span class="n">endif</span> <span class="sx">%}&#x7b;&#x25; endcapture %}</span>
+</div><div class='line marked end'><span class="o">+</span><span class="p">{</span><span class="o">%</span> <span class="n">capture</span> <span class="n">description</span> <span class="sx">%}&#x7b;&#x25; if page.description %}</span><span class="p">&#x7b;&#x7b;</span> <span class="n">page</span><span class="o">.</span><span class="n">description</span> <span class="p">}}{</span><span class="o">%</span> <span class="k">elsif</span> <span class="n">site</span><span class="o">.</span><span class="n">description</span> <span class="sx">%}&#x7b;&#x7b; site.description }</span><span class="p">}{</span><span class="o">%</span> <span class="k">else</span> <span class="sx">%}&#x7b;&#x7b; content | raw_content }</span><span class="p">}{</span><span class="o">%</span> <span class="n">endif</span> <span class="sx">%}&#x7b;&#x25; endcapture %}</span>
+</div><div class='line'><span class="o">&lt;</span><span class="n">meta</span> <span class="nb">name</span><span class="o">=</span><span class="s2">&quot;description&quot;</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&#x7b;&#x7b; description | strip_html | condense_spaces | truncate:150 }}&quot;</span><span class="o">&gt;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+
+      
+       <a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Read on &rarr;</a> 
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
 <i class="icon-calendar-empty"></i> <time datetime="2014-01-28T14:11:37+11:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: pandas | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/pandas/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2014-12-17T17:14:20+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[A taste in Pandas, ipython notebook]]></title>
+    <link href="http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas/"/>
+    <updated>2014-12-11T11:33:44+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas</id>
+    <content type="html"><![CDATA[<p>After setting up the python enviornment in the
+<a href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/">previous post</a>. I am going to run some python scripts to test our enviornment.</p>
+
+<h3>The exercise</h3>
+
+<p>The example is actually some exercises provided by the following link:
+<a href="http://nbviewer.ipython.org/urls/raw.github.com/nborwankar/LearnDataScience/master/notebooks/A2.%20Linear%20Regression%20-%20Data%20Exploration%20-%20Lending%20Club.ipynb" target="_blank">A2. Linear Regression &ndash; Data Exploration &ndash; Lending Club</a>, which is part of the page <a href="https://github.com/nborwankar/LearnDataScience" target="_blank">Learn Data Science</a>.</p>
+
+<p>The exercise includes:
+&ndash; Reading a sample csv data into <code>pandas</code>
+&ndash; Removing % signs from rates
+&ndash; Removing the word &ldquo;months&rdquo; from loan length.
+&ndash; Managing outliers, remove such rows in this case</p>
+
+<p>I have implemented them as an <code>ipython notebook</code> and it can be previewed <a href="http://nbviewer.ipython.org/github/benedict-chan/pytest/blob/master/LearnDataScience/a2-linear-regression.ipynb" target="_blank" >here</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>
