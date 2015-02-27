@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2014-12-17T17:14:20+11:00</updated>
+  <updated>2015-02-19T11:17:14+11:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,108 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Making a simple bar chart in d3 with animation]]></title>
+    <link href="http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3/"/>
+    <updated>2015-02-18T14:07:38+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3</id>
+    <content type="html"><![CDATA[<p>Although you can see lots of amazing charts in the home page of d3, d3 doesn&rsquo;t ship with any pre-built chart function.
+In this post, I am going to draw a simple animated bar chart using d3.
+The output will be:</p>
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/7/embedded/result,js,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+
+
+<!-- more -->
+
+
+<p>Let&rsquo;s start by creating a simple bar chart, we will be creating it based on the following tutorial:
+<a href="http://alignedleft.com/tutorials/d3/making-a-bar-chart" target="_blank"><a href="http://alignedleft.com/tutorials/d3/making-a-bar-chart">http://alignedleft.com/tutorials/d3/making-a-bar-chart</a></a></p>
+
+<p>The tutorial explains clearly on to how to make a simple bar chart, following is a fiddle I created, with just some modification as I preferred:</p>
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/1/embedded/js,result,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+<p>Note what have be added:</p>
+
+<figure class='code'><figcaption>barchart.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='3' class='line-number marked start end'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number marked start'></div><div data-line='10' class='line-number marked end'></div></pre></td><td class='main  js'><pre><div class='line marked start end'><span class="kd">var</span> <span class="nx">heightRatio</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dataSet</span><span class="p">)</span> <span class="o">/</span> <span class="nx">canvasHeight</span><span class="p">;</span>
+</div><div class='line'> </div><div class='line'><span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#chart&quot;</span><span class="p">)</span>
+</div><div class='line'>    <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="s2">&quot;100%&quot;</span><span class="p">)</span>
+</div><div class='line'>    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">canvasHeight</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">)</span>
+</div><div class='line'> </div><div class='line marked start'><span class="kd">var</span> <span class="nx">rectWidth</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="s2">&quot;px&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="nx">dataSet</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</div><div class='line marked end'><span class="kd">var</span> <span class="nx">barPadding</span> <span class="o">=</span> <span class="nx">rectWidth</span> <span class="o">/</span> <span class="mi">5</span><span class="p">;</span>
+</div></pre></td></tr></table></div></figure>
+
+
+<p>As an example, I am actually making the <code>scales</code> myself here, in pratice we should use d3&rsquo;s pre-defined <a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales" target="_blank">scales</a> to help us on this.</p>
+
+<h2>Adding animation to the chart</h2>
+
+<p>Too add animation in d3, we will use <code>transition</code>. To do this, it is as simple as to just assign an initial value to our chart attributes.
+Then, we assign the final values (which is, what we already have) to the chart and applies transition.
+The attributes that have to be animated are:
+&ndash; <code>y</code> of the rectangles
+&ndash; <code>height</code> of the rectangles</p>
+
+<p>So, let&rsquo;s set an initial value to <code>0</code> of our <code>y</code> and <code>height</code>.
+Therefore, we can keep our existing attributes of <code>x</code>, <code>width</code> and <code>fill</code>(color) of the chart. The code becomes:</p>
+
+<figure class='code'><figcaption>bottomDownbarchart.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number marked start'></div><div data-line='21' class='line-number marked end'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div><div data-line='25' class='line-number'></div><div data-line='26' class='line-number marked start'></div><div data-line='27' class='line-number marked'></div><div data-line='28' class='line-number marked'></div><div data-line='29' class='line-number marked end'></div></pre></td><td class='main  js'><pre><div class='line'><span class="nx">canvas</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">){</span><span class="k">return</span> <span class="nx">i</span><span class="o">*</span><span class="p">(</span> <span class="nx">rectWidth</span> <span class="p">);})</span>
+</div><div class='line marked start'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>  <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="mi">0</span><span class="p">;})</span>
+</div><div class='line marked end'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="mi">0</span><span class="p">;})</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">rectWidth</span> <span class="o">-</span> <span class="nx">barPadding</span><span class="p">)</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span> <span class="k">return</span> <span class="s2">&quot;rgb(0, &quot;</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="mi">200</span> <span class="o">-</span> <span class="nx">d</span><span class="o">/</span><span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dataSet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="p">)</span>   <span class="o">+</span><span class="s2">&quot;, 0)&quot;</span><span class="p">;</span> <span class="p">});</span>
+</div><div class='line'> </div><div class='line'><span class="c1">//Animate the chart</span>
+</div><div class='line marked start'><span class="nx">canvas</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+</div><div class='line marked'><span class="p">.</span><span class="nx">transition</span><span class="p">().</span><span class="nx">duration</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
+</div><div class='line marked'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>  <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">canvasHeight</span> <span class="o">-</span> <span class="nx">d</span><span class="o">/</span><span class="nx">heightRatio</span><span class="p">;})</span>
+</div><div class='line marked end'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">d</span><span class="o">/</span><span class="nx">heightRatio</span><span class="p">;});</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/6/embedded/result,js,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+<h3>Fixing the bottom down bar chart</h3>
+
+<p>Notice the animation we have is a bottom down chart. So, why is it not bottom up?
+<strong>It is because, the <code>y</code> start from <code>0</code> and increase downwardly.</strong>
+Therefore when we set your <code>y</code> to start from <code>0</code>, it&rsquo;s actually moving the bar downwardly too.
+So in order to fix this, we should on the other hand, set <code>y</code> to it&rsquo;s largest value, which is, the <code>cavans height</code>!</p>
+
+<figure class='code'><figcaption>bottomDownbarchart.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number marked start end'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div><div data-line='25' class='line-number'></div><div data-line='26' class='line-number'></div><div data-line='27' class='line-number'></div><div data-line='28' class='line-number'></div><div data-line='29' class='line-number'></div></pre></td><td class='main  js'><pre><div class='line'><span class="nx">canvas</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">){</span><span class="k">return</span> <span class="nx">i</span><span class="o">*</span><span class="p">(</span> <span class="nx">rectWidth</span> <span class="p">);})</span>
+</div><div class='line marked start end'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>  <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">canvasHeight</span><span class="p">;})</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="mi">0</span><span class="p">;})</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">rectWidth</span> <span class="o">-</span> <span class="nx">barPadding</span><span class="p">)</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span> <span class="k">return</span> <span class="s2">&quot;rgb(0, &quot;</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="mi">200</span> <span class="o">-</span> <span class="nx">d</span><span class="o">/</span><span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dataSet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="p">)</span>   <span class="o">+</span><span class="s2">&quot;, 0)&quot;</span><span class="p">;</span> <span class="p">});</span>
+</div><div class='line'> </div><div class='line'><span class="c1">//Animate the chart</span>
+</div><div class='line'><span class="nx">canvas</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+</div><div class='line'><span class="p">.</span><span class="nx">transition</span><span class="p">().</span><span class="nx">duration</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>  <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">canvasHeight</span> <span class="o">-</span> <span class="nx">d</span><span class="o">/</span><span class="nx">heightRatio</span><span class="p">;})</span>
+</div><div class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">d</span><span class="o">/</span><span class="nx">heightRatio</span><span class="p">;});</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/7/embedded/result,js,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+<p>Now we have a bar chart animating bottom up!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A taste in Pandas, ipython notebook]]></title>

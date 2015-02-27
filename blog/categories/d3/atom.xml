@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: d3 | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/d3/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2015-02-19T11:17:14+11:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Making a simple bar chart in d3 with animation]]></title>
+    <link href="http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3/"/>
+    <updated>2015-02-18T14:07:38+11:00</updated>
+    <id>http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3</id>
+    <content type="html"><![CDATA[<p>Although you can see lots of amazing charts in the home page of d3, d3 doesn&rsquo;t ship with any pre-built chart function.
+In this post, I am going to draw a simple animated bar chart using d3.
+The output will be:</p>
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/7/embedded/result,js,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+
+
+<!-- more -->
+
+
+<p>Let&rsquo;s start by creating a simple bar chart, we will be creating it based on the following tutorial:
+<a href="http://alignedleft.com/tutorials/d3/making-a-bar-chart" target="_blank"><a href="http://alignedleft.com/tutorials/d3/making-a-bar-chart">http://alignedleft.com/tutorials/d3/making-a-bar-chart</a></a></p>
+
+<p>The tutorial explains clearly on to how to make a simple bar chart, following is a fiddle I created, with just some modification as I preferred:</p>
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/1/embedded/js,result,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+<p>Note what have be added:
+
+``` js barchart.cs start:3 mark:3,9,10
+var heightRatio = d3.max(dataSet) / canvasHeight;</p>
+
+<p>var canvas = d3.select(&ldquo;#chart&rdquo;)</p>
+
+<pre><code>.append("svg").attr("width", "100%")
+.attr("height", canvasHeight + "px")
+</code></pre>
+
+<p>var rectWidth = canvas.style(&ldquo;width&rdquo;).replace(&ldquo;px&rdquo;, &ldquo;&rdquo;) / dataSet.length;
+var barPadding = rectWidth / 5;
+```
+</p>
+
+<p>As an example, I am actually making the <code>scales</code> myself here, in pratice we should use d3&rsquo;s pre-defined <a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales" target="_blank">scales</a> to help us on this.</p>
+
+<h2>Adding animation to the chart</h2>
+
+<p>Too add animation in d3, we will use <code>transition</code>. To do this, it is as simple as to just assign an initial value to our chart attributes.
+Then, we assign the final values (which is, what we already have) to the chart and applies transition.
+The attributes that have to be animated are:
+&ndash; <code>y</code> of the rectangles
+&ndash; <code>height</code> of the rectangles</p>
+
+<p>So, let&rsquo;s set an initial value to <code>0</code> of our <code>y</code> and <code>height</code>.
+Therefore, we can keep our existing attributes of <code>x</code>, <code>width</code> and <code>fill</code>(color) of the chart. The code becomes:
+
+``` js bottomDownbarchart.cs start:18 mark:20,21,26-29
+canvas.selectAll(&lsquo;rect&rsquo;)
+.attr(&lsquo;x&rsquo;, function(d,i){return i*( rectWidth );})
+.attr(&lsquo;y&rsquo;,  function(d){return 0;})
+.attr(&ldquo;height&rdquo;, function(d){return 0;})
+.attr(&ldquo;width&rdquo;, rectWidth &ndash; barPadding)
+.attr(&ldquo;fill&rdquo;, function(d){ return &ldquo;rgb(0, &rdquo; + Math.floor(200 &ndash; d/d3.max(dataSet) * 100 )   +&ldquo;, 0)&rdquo;; });</p>
+
+<p>//Animate the chart
+canvas.selectAll(&lsquo;rect&rsquo;)
+.transition().duration(3000)
+.attr(&lsquo;y&rsquo;,  function(d){return canvasHeight &ndash; d/heightRatio;})
+.attr(&ldquo;height&rdquo;, function(d){return d/heightRatio;});
+```
+</p>
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/6/embedded/result,js,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+<h3>Fixing the bottom down bar chart</h3>
+
+<p>Notice the animation we have is a bottom down chart. So, why is it not bottom up?
+<strong>It is because, the <code>y</code> start from <code>0</code> and increase downwardly.</strong>
+Therefore when we set your <code>y</code> to start from <code>0</code>, it&rsquo;s actually moving the bar downwardly too.
+So in order to fix this, we should on the other hand, set <code>y</code> to it&rsquo;s largest value, which is, the <code>cavans height</code>!</p>
+
+<p>
+``` js bottomDownbarchart.cs start:18 mark:20
+canvas.selectAll(&lsquo;rect&rsquo;)
+.attr(&lsquo;x&rsquo;, function(d,i){return i*( rectWidth );})
+.attr(&lsquo;y&rsquo;,  function(d){return canvasHeight;})
+.attr(&ldquo;height&rdquo;, function(d){return 0;})
+.attr(&ldquo;width&rdquo;, rectWidth &ndash; barPadding)
+.attr(&ldquo;fill&rdquo;, function(d){ return &ldquo;rgb(0, &rdquo; + Math.floor(200 &ndash; d/d3.max(dataSet) * 100 )   +&ldquo;, 0)&rdquo;; });</p>
+
+<p>//Animate the chart
+canvas.selectAll(&lsquo;rect&rsquo;)
+.transition().duration(3000)
+.attr(&lsquo;y&rsquo;,  function(d){return canvasHeight &ndash; d/heightRatio;})
+.attr(&ldquo;height&rdquo;, function(d){return d/heightRatio;});
+```
+</p>
+
+<iframe width="100%" height="300" src="http://benedict-chan.github.io//jsfiddle.net/benedict_chan/rn8rdvt8/7/embedded/result,js,html,css/" allowfullscreen="allowfullscreen" frameborder="0">
+</iframe>
+
+
+<p>Now we have a bar chart animating bottom up!</p>
+]]></content>
+  </entry>
+  
+</feed>
