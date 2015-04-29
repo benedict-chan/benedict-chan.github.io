@@ -2,7 +2,7 @@
 layout: post
 title: "ASP.NET MVC how to handle unauthorized response in JSON for your API"
 date: 2014-02-11 13:16:43 +1100
-comments: true
+comments: false
 categories: ["mobile", "authentication", "asp.net mvc", "dependency injection"]
 description: ASP.NET MVC how to handle unauthorized response in JSON for your API
 keywords: "mobile application, api, authentication, asp.net mvc, filterattribute"

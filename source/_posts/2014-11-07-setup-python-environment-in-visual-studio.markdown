@@ -2,7 +2,7 @@
 layout: post
 title: "Setup Python (Anaconda) Environment in Visual Studio"
 date: 2014-11-07 16:33:14 +1100
-comments: true
+comments: false
 categories: ["python", "anaconda"]
 description: 
 keywords: "setup python anaconda visual studio"
@@ -36,7 +36,7 @@ We can setup our new Anaconda environment like this:
 
 {% img center /images/posts/2014-11-07-PythonEnvironmentOptions.jpg  %}
 
-Once are have finished our setup, we can create a Python Project in Visual Studio, then try to run it our script using :
+Once we have finished the setup, we can create a Python Project in Visual Studio, then try to run it our script using :
 
 From Visual Studio -> Options -> Python Tools -> Execute Project in Python Interactive
 
