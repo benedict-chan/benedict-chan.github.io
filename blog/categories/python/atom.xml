@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-02-19T11:17:14+11:00</updated>
+  <updated>2015-04-29T16:39:35+10:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -70,7 +70,7 @@ We can configu it from:</p>
 
 <p><img class="center" src="/images/posts/2014-11-07-PythonEnvironmentOptions.jpg" title="" ></p>
 
-<p>Once are have finished our setup, we can create a Python Project in Visual Studio, then try to run it our script using :</p>
+<p>Once we have finished the setup, we can create a Python Project in Visual Studio, then try to run it our script using :</p>
 
 <p>From Visual Studio &ndash;> Options &ndash;> Python Tools &ndash;> Execute Project in Python Interactive</p>
 ]]></content>
