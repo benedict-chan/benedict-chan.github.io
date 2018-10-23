@@ -4,84 +4,90 @@
         <loc>
             http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/
         </loc>
-        <lastmod>2014-02-06T10:46:50+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
-        <loc>http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress/</loc>
-        <lastmod>2014-02-06T10:46:41+11:00</lastmod>
+        <loc>http://benedict-chan.github.io/blog/2014/01/28/adding-simple-seo-for-octopress/</loc>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/
         </loc>
-        <lastmod>2014-02-06T17:23:40+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/
         </loc>
-        <lastmod>2014-02-11T13:17:37+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api/
         </loc>
-        <lastmod>2015-02-18T14:11:51+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard/
         </loc>
-        <lastmod>2014-02-13T17:43:43+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc/
         </loc>
-        <lastmod>2014-02-24T17:20:02+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5/
         </loc>
-        <lastmod>2014-03-31T09:36:52+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/
         </loc>
-        <lastmod>2014-11-17T16:18:41+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/
         </loc>
-        <lastmod>2015-04-29T16:36:11+10:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>
             http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server/
         </loc>
-        <lastmod>2014-11-17T17:57:38+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas/</loc>
-        <lastmod>2014-12-17T17:12:52+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3/</loc>
-        <lastmod>2015-02-18T15:39:40+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2/
+        </loc>
+        <lastmod>2018-10-19T05:58:00+00:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/blog/archives/</loc>
-        <lastmod>2015-04-29T16:36:11+10:00</lastmod>
+        <lastmod>2018-10-19T05:58:00+00:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/</loc>
-        <lastmod>2015-04-29T16:36:11+10:00</lastmod>
+        <lastmod>2018-10-19T05:58:00+00:00</lastmod>
     </url>
     <url>
         <loc>http://benedict-chan.github.io/robots.txt</loc>
-        <lastmod>2014-02-03T17:07:19+11:00</lastmod>
+        <lastmod>2018-10-12T00:58:02+00:00</lastmod>
     </url>
 </urlset>

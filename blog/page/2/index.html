@@ -118,7 +118,96 @@
   
 
 
-<i class="icon-calendar-empty"></i> <time datetime="2014-02-05T16:35:51+11:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time></h5>
+<i class="icon-calendar-empty"></i> <time datetime="2014-02-06T06:22:34+00:00" pubdate data-updated="true">Feb 6<span>th</span>, 2014</time></h5>
+          <div class="row-fluid">
+          
+          </div>
+          
+          <div class="row-fluid">
+          
+          <a href="/blog/categories/asp-dot-net-mvc/"><span class="badge">asp.net mvc</span></a>
+          
+          <a href="/blog/categories/authentication/"><span class="badge">authentication</span></a>
+          
+          <a href="/blog/categories/dependency-injection/"><span class="badge">dependency injection</span></a>
+          
+          <a href="/blog/categories/mobile/"><span class="badge">mobile</span></a>
+          
+          <a href="/blog/categories/mocking/"><span class="badge">mocking</span></a>
+          
+          <a href="/blog/categories/unit-test/"><span class="badge">unit test</span></a>
+          
+          </div>
+          
+    </div>
+    <div class="span10 post-container">
+      <h1 class="link"><a href="/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/">Simple Authentication API for mobile application using ASP.NET MVC</a></h1>
+      <p>This is actually part of server-side implementaion for the previous post: <a href="/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">How to authenticate from a mobile application to an existing web pplication</a>
+We are going to create an ASP.NET MVC action as a JSON API to authenticate a mobile client.</p>
+
+<h2>The Token Interface</h2>
+
+<p>First, let&rsquo;s create a token service interface for our API Controller. We will be using dependency injection pattern.</p>
+
+<figure class='code'><figcaption>IAuthTokenService.cs</figcaption><div class='highlight'><table><tr><td class='line-numbers' aria-hidden='true'><pre><div data-line='1' class='line-number'></div><div data-line='2' class='line-number'></div><div data-line='3' class='line-number'></div><div data-line='4' class='line-number'></div><div data-line='5' class='line-number'></div><div data-line='6' class='line-number'></div><div data-line='7' class='line-number'></div><div data-line='8' class='line-number'></div><div data-line='9' class='line-number'></div><div data-line='10' class='line-number'></div><div data-line='11' class='line-number'></div><div data-line='12' class='line-number'></div><div data-line='13' class='line-number'></div><div data-line='14' class='line-number'></div><div data-line='15' class='line-number'></div><div data-line='16' class='line-number'></div><div data-line='17' class='line-number'></div><div data-line='18' class='line-number'></div><div data-line='19' class='line-number'></div><div data-line='20' class='line-number'></div><div data-line='21' class='line-number'></div><div data-line='22' class='line-number'></div><div data-line='23' class='line-number'></div><div data-line='24' class='line-number'></div></pre></td><td class='main  csharp'><pre><div class='line'>    <span class="k">public</span> <span class="k">interface</span> <span class="n">IAuthTokenService</span>
+</div><div class='line'>    <span class="p">{</span>
+</div><div class='line'>        <span class="c1">/// &lt;summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// Issue a token for a user</span>
+</div><div class='line'>        <span class="c1">/// &lt;/summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;username&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;returns&gt;tokenId&lt;/returns&gt;</span>
+</div><div class='line'>        <span class="kt">string</span> <span class="nf">IssuseToken</span><span class="p">(</span><span class="kt">string</span> <span class="n">username</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>        <span class="c1">/// &lt;summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// Check if a token is valid</span>
+</div><div class='line'>        <span class="c1">/// &lt;/summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;username&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;tokenId&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;returns&gt;&lt;/returns&gt;</span>
+</div><div class='line'>        <span class="kt">bool</span> <span class="nf">IsTokenValid</span><span class="p">(</span><span class="kt">string</span> <span class="n">username</span><span class="p">,</span> <span class="kt">string</span> <span class="n">tokenId</span><span class="p">);</span>
+</div><div class='line'> </div><div class='line'>        <span class="c1">/// &lt;summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// Expire users&#39; tokens (designed to be called when user changed their password)</span>
+</div><div class='line'>        <span class="c1">/// &lt;/summary&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;username&quot;&gt;&lt;/param&gt;</span>
+</div><div class='line'>        <span class="c1">/// &lt;param name=&quot;tokensCreatedBefore&quot;&gt;expire all tokens created before this time&lt;/param&gt;</span>
+</div><div class='line'>        <span class="k">void</span> <span class="nf">ExpireUserTokens</span><span class="p">(</span><span class="kt">string</span> <span class="n">username</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">tokensCreatedBefore</span><span class="p">);</span>
+</div><div class='line'>    <span class="p">}</span>
+</div></pre></td></tr></table></div></figure>
+
+
+
+
+
+      
+       <a href="/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/">Read on &rarr;</a> 
+    </div>
+  </div>
+
+
+
+    </article>
+    
+    <hr>
+    
+  
+  
+    <article>
+      
+
+  <div class="row-fluid">
+    <div class="span2 post-meta">
+	  <h5 class="date-time">
+
+
+
+
+
+
+
+
+  
+
+
+<i class="icon-calendar-empty"></i> <time datetime="2014-02-05T05:35:51+00:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           
           </div>
@@ -190,7 +279,7 @@
   
 
 
-<i class="icon-calendar-empty"></i> <time datetime="2014-01-29T10:34:19+11:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time></h5>
+<i class="icon-calendar-empty"></i> <time datetime="2014-01-28T23:34:19+00:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           
           </div>
@@ -205,7 +294,7 @@
           
     </div>
     <div class="span10 post-container">
-      <h1 class="link"><a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Adding simple SEO for octopress</a></h1>
+      <h1 class="link"><a href="/blog/2014/01/28/adding-simple-seo-for-octopress/">Adding simple SEO for octopress</a></h1>
       <h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
 
 <p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
@@ -227,7 +316,7 @@ After a google search, seems it is quite easy to setup.</p>
 
 
       
-       <a href="/blog/2014/01/29/adding-simple-seo-for-octopress/">Read on &rarr;</a> 
+       <a href="/blog/2014/01/28/adding-simple-seo-for-octopress/">Read on &rarr;</a> 
     </div>
   </div>
 
@@ -256,7 +345,7 @@ After a google search, seems it is quite easy to setup.</p>
   
 
 
-<i class="icon-calendar-empty"></i> <time datetime="2014-01-28T14:11:37+11:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time></h5>
+<i class="icon-calendar-empty"></i> <time datetime="2014-01-28T03:11:37+00:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time></h5>
           <div class="row-fluid">
           
           </div>
@@ -320,7 +409,7 @@ ruby dk.rb install
       <div class="row-fluid">
         <footer class="footer-page" role="contentinfo">
           <p>
-  Copyright &copy; 2015 - Benedict Chan -
+  Copyright &copy; 2018 - Benedict Chan -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> - Theme by <a href="http://alexgaribay.com">Alex Garibay</a>
 </p>
 

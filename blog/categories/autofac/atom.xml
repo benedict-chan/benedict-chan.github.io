@@ -4,7 +4,7 @@
   <title><![CDATA[Category: autofac | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/autofac/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Resolving implementations at runtime using Autofac]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/"/>
-    <updated>2014-08-13T20:02:01+10:00</updated>
+    <updated>2014-08-13T10:02:01+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac</id>
     <content type="html"><![CDATA[<p>There are lots of ways on resolving your services and implementations at runtime in Autofac. Following is a simple example to demonstrate how we can do it.</p>
 

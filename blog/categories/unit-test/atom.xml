@@ -4,7 +4,7 @@
   <title><![CDATA[Category: unit test | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/unit-test/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Adding Email Templates service in your ASP.NET MVC projects using IoC]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc/"/>
-    <updated>2014-02-24T17:18:57+11:00</updated>
+    <updated>2014-02-24T06:18:57+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc</id>
     <content type="html"><![CDATA[<p>It looks obvious to give your web applications to send an email with some templates engine.
 After some googling, I decided to use <a href="http://aboutcode.net/postal/" target="_blank">Postal</a> as the preferred service because:
@@ -82,7 +82,7 @@ To apply Postal in your class, we can simply inject it&rsquo;s IEmailService to 
   <entry>
     <title type="html"><![CDATA[Simple Authentication API for mobile application using ASP.NET MVC]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/"/>
-    <updated>2014-02-06T17:22:34+11:00</updated>
+    <updated>2014-02-06T06:22:34+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc</id>
     <content type="html"><![CDATA[<p>This is actually part of server-side implementaion for the previous post: <a href="/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">How to authenticate from a mobile application to an existing web pplication</a>
 We are going to create an ASP.NET MVC action as a JSON API to authenticate a mobile client.</p>

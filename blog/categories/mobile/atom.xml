@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mobile | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/mobile/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[ASP.NET MVC how to handle unauthorized response in JSON for your API]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api/"/>
-    <updated>2014-02-11T13:16:43+11:00</updated>
+    <updated>2014-02-11T02:16:43+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api</id>
     <content type="html"><![CDATA[<p>Assuming you want to prepare some JSON API in your ASP.NET MVC with authorization.</p>
 
@@ -98,7 +98,7 @@ This probably not we want here as we are expecting a JSON for our API result.</p
   <entry>
     <title type="html"><![CDATA[Simple Authentication API for mobile application using ASP.NET MVC]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/"/>
-    <updated>2014-02-06T17:22:34+11:00</updated>
+    <updated>2014-02-06T06:22:34+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc</id>
     <content type="html"><![CDATA[<p>This is actually part of server-side implementaion for the previous post: <a href="/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">How to authenticate from a mobile application to an existing web pplication</a>
 We are going to create an ASP.NET MVC action as a JSON API to authenticate a mobile client.</p>
@@ -228,7 +228,7 @@ public class SimpleApiControllerTest
   <entry>
     <title type="html"><![CDATA[How to authenticate from a mobile application to an existing web application]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/"/>
-    <updated>2014-02-05T16:35:51+11:00</updated>
+    <updated>2014-02-05T05:35:51+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application</id>
     <content type="html"><![CDATA[<h2>The problem</h2>
 

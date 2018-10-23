@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -14,10 +14,52 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Use Docker to setup an environment for Octopress2]]></title>
+    <link href="http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2/"/>
+    <updated>2018-10-18T10:23:39+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2</id>
+    <content type="html"><![CDATA[<h2>Docker image for running Octopress 2</h2>
+
+<p>Since this blog is made from Octopress 2 and it seems that Octopress has ended it&rsquo;s development after version 3.</p>
+
+<p>In order to keep using it, it&rsquo;s better to create an development environment that I can keep on running it in the future.</p>
+
+<p>The DockerFile for setting this environment is located <a href="https://github.com/benedict-chan/dockers/tree/master/octopress2">here</a>.</p>
+
+<p>The Docker image is located in Docker Hub: <a href="https://hub.docker.com/r/benedictchan/octopress2/">https://hub.docker.com/r/benedictchan/octopress2/</a>.</p>
+
+<h3>Running the environment</h3>
+
+<p>To simply use this Docker image, you can just mount your Octopress repository&rsquo;s source branch to the container&rsquo;s <code>app</code> folder:</p>
+
+<p><code>docker run -ti --rm -p 4000:4000 -v {source_path}:/app benedictchan/octopress2</code></p>
+
+<!-- more -->
+
+
+<h4>Create new post</h4>
+
+<p><code>rake new_post["title"]</code></p>
+
+<h4>Generate the blog</h4>
+
+<p><code>rake generate</code></p>
+
+<h4>Preview the blog</h4>
+
+<p><code>rake preview</code></p>
+
+<h4>Publish the blog</h4>
+
+<p><code>rake deploy</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Adding simple SEO for octopress]]></title>
-    <link href="http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress/"/>
-    <updated>2014-01-29T10:34:19+11:00</updated>
-    <id>http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress</id>
+    <link href="http://benedict-chan.github.io/blog/2014/01/28/adding-simple-seo-for-octopress/"/>
+    <updated>2014-01-28T23:34:19+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/01/28/adding-simple-seo-for-octopress</id>
     <content type="html"><![CDATA[<h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
 
 <p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
@@ -116,7 +158,7 @@ post.puts "---"
   <entry>
     <title type="html"><![CDATA[Setup Octopress with Github pages in Windows]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/"/>
-    <updated>2014-01-28T14:11:37+11:00</updated>
+    <updated>2014-01-28T03:11:37+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows</id>
     <content type="html"><![CDATA[<h2>Software</h2>
 

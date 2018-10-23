@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -14,9 +14,51 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Use Docker to setup an environment for Octopress2]]></title>
+    <link href="http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2/"/>
+    <updated>2018-10-18T10:23:39+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2</id>
+    <content type="html"><![CDATA[<h2>Docker image for running Octopress 2</h2>
+
+<p>Since this blog is made from Octopress 2 and it seems that Octopress has ended it&rsquo;s development after version 3.</p>
+
+<p>In order to keep using it, it&rsquo;s better to create an development environment that I can keep on running it in the future.</p>
+
+<p>The DockerFile for setting this environment is located <a href="https://github.com/benedict-chan/dockers/tree/master/octopress2">here</a>.</p>
+
+<p>The Docker image is located in Docker Hub: <a href="https://hub.docker.com/r/benedictchan/octopress2/">https://hub.docker.com/r/benedictchan/octopress2/</a>.</p>
+
+<h3>Running the environment</h3>
+
+<p>To simply use this Docker image, you can just mount your Octopress repository&rsquo;s source branch to the container&rsquo;s <code>app</code> folder:</p>
+
+<p><code>docker run -ti --rm -p 4000:4000 -v {source_path}:/app benedictchan/octopress2</code></p>
+
+<!-- more -->
+
+
+<h4>Create new post</h4>
+
+<p><code>rake new_post["title"]</code></p>
+
+<h4>Generate the blog</h4>
+
+<p><code>rake generate</code></p>
+
+<h4>Preview the blog</h4>
+
+<p><code>rake preview</code></p>
+
+<h4>Publish the blog</h4>
+
+<p><code>rake deploy</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Making a simple bar chart in d3 with animation]]></title>
     <link href="http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3/"/>
-    <updated>2015-02-18T14:07:38+11:00</updated>
+    <updated>2015-02-18T03:07:38+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3</id>
     <content type="html"><![CDATA[<p>Although you can see lots of amazing charts in the home page of d3, d3 doesn&rsquo;t ship with any pre-built chart function.
 In this post, I am going to draw a simple animated bar chart using d3.
@@ -118,7 +160,7 @@ So in order to fix this, we should on the other hand, set <code>y</code> to it&r
   <entry>
     <title type="html"><![CDATA[A taste in Pandas, ipython notebook]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas/"/>
-    <updated>2014-12-11T11:33:44+11:00</updated>
+    <updated>2014-12-11T00:33:44+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas</id>
     <content type="html"><![CDATA[<p>After setting up the python enviornment in the
 <a href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/">previous post</a>. I am going to run some python scripts to test our enviornment.</p>
@@ -141,7 +183,7 @@ So in order to fix this, we should on the other hand, set <code>y</code> to it&r
   <entry>
     <title type="html"><![CDATA[Exporting data to CSV in SQL Server using bcp]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server/"/>
-    <updated>2014-11-17T16:13:22+11:00</updated>
+    <updated>2014-11-17T05:13:22+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server</id>
     <content type="html"><![CDATA[<p>There are several ways to export data in SQL Server, in this post, I am using <code>bcp</code> with <code>xp_cmdshell</code>.</p>
 
@@ -215,7 +257,7 @@ So in order to fix this, we should on the other hand, set <code>y</code> to it&r
   <entry>
     <title type="html"><![CDATA[Setup Python (Anaconda) Environment in Visual Studio]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/"/>
-    <updated>2014-11-07T16:33:14+11:00</updated>
+    <updated>2014-11-07T05:33:14+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio</id>
     <content type="html"><![CDATA[<h2>Installing Python (Anaconda)</h2>
 
@@ -255,7 +297,7 @@ We can configu it from:</p>
   <entry>
     <title type="html"><![CDATA[Resolving implementations at runtime using Autofac]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac/"/>
-    <updated>2014-08-13T20:02:01+10:00</updated>
+    <updated>2014-08-13T10:02:01+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/08/13/resolving-implementations-at-runtime-in-autofac</id>
     <content type="html"><![CDATA[<p>There are lots of ways on resolving your services and implementations at runtime in Autofac. Following is a simple example to demonstrate how we can do it.</p>
 
@@ -370,7 +412,7 @@ Therefore if our services have other dependencies, Autofac will also help us to 
   <entry>
     <title type="html"><![CDATA[Authentication logics from ASP.NET MVC 4 to 5]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5/"/>
-    <updated>2014-03-28T16:14:24+11:00</updated>
+    <updated>2014-03-28T05:14:24+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5</id>
     <content type="html"><![CDATA[<h2>OWIN</h2>
 
@@ -489,7 +531,7 @@ Therefore if our services have other dependencies, Autofac will also help us to 
   <entry>
     <title type="html"><![CDATA[Adding Email Templates service in your ASP.NET MVC projects using IoC]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc/"/>
-    <updated>2014-02-24T17:18:57+11:00</updated>
+    <updated>2014-02-24T06:18:57+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/24/adding-email-templates-service-in-your-asp-dot-net-mvc-projects-using-ioc</id>
     <content type="html"><![CDATA[<p>It looks obvious to give your web applications to send an email with some templates engine.
 After some googling, I decided to use <a href="http://aboutcode.net/postal/" target="_blank">Postal</a> as the preferred service because:
@@ -539,7 +581,7 @@ To apply Postal in your class, we can simply inject it&rsquo;s IEmailService to 
   <entry>
     <title type="html"><![CDATA[Creating custom Filter Attribute in Orchard]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard/"/>
-    <updated>2014-02-12T17:14:23+11:00</updated>
+    <updated>2014-02-12T06:14:23+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/12/creating-custom-filter-attribute-in-orchard</id>
     <content type="html"><![CDATA[<h2>Filter in Orchard</h2>
 
@@ -604,7 +646,7 @@ To apply Postal in your class, we can simply inject it&rsquo;s IEmailService to 
   <entry>
     <title type="html"><![CDATA[ASP.NET MVC how to handle unauthorized response in JSON for your API]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api/"/>
-    <updated>2014-02-11T13:16:43+11:00</updated>
+    <updated>2014-02-11T02:16:43+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/11/asp-dot-net-mvc-how-to-handle-unauthorized-response-in-json-for-your-api</id>
     <content type="html"><![CDATA[<p>Assuming you want to prepare some JSON API in your ASP.NET MVC with authorization.</p>
 
@@ -676,7 +718,7 @@ This probably not we want here as we are expecting a JSON for our API result.</p
   <entry>
     <title type="html"><![CDATA[Simple Authentication API for mobile application using ASP.NET MVC]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc/"/>
-    <updated>2014-02-06T17:22:34+11:00</updated>
+    <updated>2014-02-06T06:22:34+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/06/simple-authentication-api-for-mobile-application-using-asp-dot-net-mvc</id>
     <content type="html"><![CDATA[<p>This is actually part of server-side implementaion for the previous post: <a href="http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/">How to authenticate from a mobile application to an existing web pplication</a>
 We are going to create an ASP.NET MVC action as a JSON API to authenticate a mobile client.</p>
@@ -786,7 +828,7 @@ We can actually assign someone to help us to implement the interface later.</p>
   <entry>
     <title type="html"><![CDATA[How to authenticate from a mobile application to an existing web application]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application/"/>
-    <updated>2014-02-05T16:35:51+11:00</updated>
+    <updated>2014-02-05T05:35:51+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/02/05/how-to-authenticate-from-a-mobile-application-to-an-existing-web-application</id>
     <content type="html"><![CDATA[<h2>The problem</h2>
 
@@ -841,9 +883,9 @@ One way to pass this token, is to send it throught HTTP headers instead of a URL
   
   <entry>
     <title type="html"><![CDATA[Adding simple SEO for octopress]]></title>
-    <link href="http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress/"/>
-    <updated>2014-01-29T10:34:19+11:00</updated>
-    <id>http://benedict-chan.github.io/blog/2014/01/29/adding-simple-seo-for-octopress</id>
+    <link href="http://benedict-chan.github.io/blog/2014/01/28/adding-simple-seo-for-octopress/"/>
+    <updated>2014-01-28T23:34:19+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2014/01/28/adding-simple-seo-for-octopress</id>
     <content type="html"><![CDATA[<h2>Adding Meta Tag, Keywords and Descriptions for your Octopress Blog</h2>
 
 <p>I just started using Octopress, seems it is quite simple to setup. However, the default template doesn&rsquo;t provide the fields for your site, your post, or your pages.
@@ -928,7 +970,7 @@ After a google search, seems it is quite easy to setup.</p>
   <entry>
     <title type="html"><![CDATA[Setup Octopress with Github pages in Windows]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows/"/>
-    <updated>2014-01-28T14:11:37+11:00</updated>
+    <updated>2014-01-28T03:11:37+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/01/28/setup-octopress-with-github-pages-in-windows</id>
     <content type="html"><![CDATA[<h2>Software</h2>
 

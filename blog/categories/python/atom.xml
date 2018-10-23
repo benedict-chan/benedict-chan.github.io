@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[A taste in Pandas, ipython notebook]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas/"/>
-    <updated>2014-12-11T11:33:44+11:00</updated>
+    <updated>2014-12-11T00:33:44+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/12/11/a-taste-in-pandas</id>
     <content type="html"><![CDATA[<p>After setting up the python enviornment in the
 <a href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/">previous post</a>. I am going to run some python scripts to test our enviornment.</p>
@@ -39,7 +39,7 @@
   <entry>
     <title type="html"><![CDATA[Setup Python (Anaconda) Environment in Visual Studio]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio/"/>
-    <updated>2014-11-07T16:33:14+11:00</updated>
+    <updated>2014-11-07T05:33:14+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/11/07/setup-python-environment-in-visual-studio</id>
     <content type="html"><![CDATA[<h2>Installing Python (Anaconda)</h2>
 

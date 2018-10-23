@@ -4,7 +4,7 @@
   <title><![CDATA[Category: sql | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/sql/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Exporting data to CSV in SQL Server using bcp]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server/"/>
-    <updated>2014-11-17T16:13:22+11:00</updated>
+    <updated>2014-11-17T05:13:22+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/11/17/exporting-data-to-csv-in-sql-server</id>
     <content type="html"><![CDATA[<p>There are several ways to export data in SQL Server, in this post, I am using <code>bcp</code> with <code>xp_cmdshell</code>.</p>
 

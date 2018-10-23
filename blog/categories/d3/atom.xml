@@ -4,7 +4,7 @@
   <title><![CDATA[Category: d3 | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/d3/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Making a simple bar chart in d3 with animation]]></title>
     <link href="http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3/"/>
-    <updated>2015-02-18T14:07:38+11:00</updated>
+    <updated>2015-02-18T03:07:38+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2015/02/18/making-a-simple-bar-chart-in-d3</id>
     <content type="html"><![CDATA[<p>Although you can see lots of amazing charts in the home page of d3, d3 doesn&rsquo;t ship with any pre-built chart function.
 In this post, I am going to draw a simple animated bar chart using d3.

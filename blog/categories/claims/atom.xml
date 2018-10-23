@@ -4,7 +4,7 @@
   <title><![CDATA[Category: claims | Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/blog/categories/claims/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2015-04-29T16:50:31+10:00</updated>
+  <updated>2018-10-22T04:29:34+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Authentication logics from ASP.NET MVC 4 to 5]]></title>
     <link href="http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5/"/>
-    <updated>2014-03-28T16:14:24+11:00</updated>
+    <updated>2014-03-28T05:14:24+00:00</updated>
     <id>http://benedict-chan.github.io/blog/2014/03/28/authentication-logics-from-asp-dot-net-mvc-4-to-5</id>
     <content type="html"><![CDATA[<h2>OWIN</h2>
 
