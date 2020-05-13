@@ -1,0 +1,8 @@
+{
+    "name": "octopress2",
+    "image": "benedictchan/octopress2",
+	"context": ". .",
+    "forwardPorts": [4000],
+    "workspaceFolder": "/app",
+    "postCreateCommand": "rake preview",
+}

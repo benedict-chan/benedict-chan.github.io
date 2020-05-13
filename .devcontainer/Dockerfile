@@ -1,0 +1,3 @@
+
+FROM benedictchan/octopress2
+
