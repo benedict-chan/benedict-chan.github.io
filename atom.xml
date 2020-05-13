@@ -4,7 +4,7 @@
   <title><![CDATA[Benedict Chan]]></title>
   <link href="http://benedict-chan.github.io/atom.xml" rel="self"/>
   <link href="http://benedict-chan.github.io/"/>
-  <updated>2018-10-22T04:29:34+00:00</updated>
+  <updated>2020-05-13T01:02:49+00:00</updated>
   <id>http://benedict-chan.github.io/</id>
   <author>
     <name><![CDATA[Benedict Chan]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Setting up Ubuntu and Docker]]></title>
+    <link href="http://benedict-chan.github.io/blog/2018/12/08/setting-up-ubuntu-and-docker/"/>
+    <updated>2018-12-08T10:38:22+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2018/12/08/setting-up-ubuntu-and-docker</id>
+    <content type="html"><![CDATA[<p>This post just listed some commands I used for setting up a testing Ubuntu machine and Docker.</p>
+
+<h3>Install xfce using apt</h3>
+
+<pre><code>    sudo apt-get update
+    sudo apt-get install xfce4
+</code></pre>
+
+<h3>Install xrdp using apt</h3>
+
+<pre><code>    sudo apt-get install xrdp
+    sudo systemctl enable xrdp
+    echo xfce4-session &gt;~/.xsession
+    sudo service xrdp restart
+
+    # *Setting up a password for the rdp user*
+    sudo passwd {username}
+</code></pre>
+
+<h3>Setting up Docker</h3>
+
+<pre><code>    sudo apt-get install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        software-properties-common
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+
+    sudo apt-get update
+
+    sudo apt-get install docker-ce
+</code></pre>
+
+<h3>Setting up Docker Compose</h3>
+
+<pre><code>    sudo curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+</code></pre>
+
+<h3>Common methods for SSH under Windows</h3>
+
+<pre><code>    # *Generating SSH key with a specific location*
+    ssh-keygen -t rsa -b 2048 -C "{comment/email}" -f {KeyLocation}
+
+    # *Copying the SSH public key*
+    clip &lt; {KeyLocation}.pub
+
+    # *SSH using a key with a specific location*
+    ssh username@hostip -i {KeyLocation}
+</code></pre>
+
+<h3>Setup Firefox</h3>
+
+<pre><code>    sudo apt-get install firefox
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Use Docker to setup an environment for Octopress2]]></title>

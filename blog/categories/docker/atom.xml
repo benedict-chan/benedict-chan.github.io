@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: docker | Benedict Chan]]></title>
+  <link href="http://benedict-chan.github.io/blog/categories/docker/atom.xml" rel="self"/>
+  <link href="http://benedict-chan.github.io/"/>
+  <updated>2020-05-13T01:02:49+00:00</updated>
+  <id>http://benedict-chan.github.io/</id>
+  <author>
+    <name><![CDATA[Benedict Chan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setting up Ubuntu and Docker]]></title>
+    <link href="http://benedict-chan.github.io/blog/2018/12/08/setting-up-ubuntu-and-docker/"/>
+    <updated>2018-12-08T10:38:22+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2018/12/08/setting-up-ubuntu-and-docker</id>
+    <content type="html"><![CDATA[<p>This post just listed some commands I used for setting up a testing Ubuntu machine and Docker.</p>
+
+<h3>Install xfce using apt</h3>
+
+<pre><code>    sudo apt-get update
+    sudo apt-get install xfce4
+</code></pre>
+
+<h3>Install xrdp using apt</h3>
+
+<pre><code>    sudo apt-get install xrdp
+    sudo systemctl enable xrdp
+    echo xfce4-session &gt;~/.xsession
+    sudo service xrdp restart
+
+    # *Setting up a password for the rdp user*
+    sudo passwd {username}
+</code></pre>
+
+<h3>Setting up Docker</h3>
+
+<pre><code>    sudo apt-get install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        software-properties-common
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+
+    sudo apt-get update
+
+    sudo apt-get install docker-ce
+</code></pre>
+
+<h3>Setting up Docker Compose</h3>
+
+<pre><code>    sudo curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+</code></pre>
+
+<h3>Common methods for SSH under Windows</h3>
+
+<pre><code>    # *Generating SSH key with a specific location*
+    ssh-keygen -t rsa -b 2048 -C "{comment/email}" -f {KeyLocation}
+
+    # *Copying the SSH public key*
+    clip &lt; {KeyLocation}.pub
+
+    # *SSH using a key with a specific location*
+    ssh username@hostip -i {KeyLocation}
+</code></pre>
+
+<h3>Setup Firefox</h3>
+
+<pre><code>    sudo apt-get install firefox
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Use Docker to setup an environment for Octopress2]]></title>
+    <link href="http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2/"/>
+    <updated>2018-10-18T10:23:39+00:00</updated>
+    <id>http://benedict-chan.github.io/blog/2018/10/18/use-docker-to-setup-an-environment-for-octopress2</id>
+    <content type="html"><![CDATA[<h2>Docker image for running Octopress 2</h2>
+
+<p>Since this blog is made from Octopress 2 and it seems that Octopress has ended it&rsquo;s development after version 3.</p>
+
+<p>In order to keep using it, it&rsquo;s better to create an development environment that I can keep on running it in the future.</p>
+
+<p>The DockerFile for setting this environment is located <a href="https://github.com/benedict-chan/dockers/tree/master/octopress2">here</a>.</p>
+
+<p>The Docker image is located in Docker Hub: <a href="https://hub.docker.com/r/benedictchan/octopress2/">https://hub.docker.com/r/benedictchan/octopress2/</a>.</p>
+
+<h3>Running the environment</h3>
+
+<p>To simply use this Docker image, you can just mount your Octopress repository&rsquo;s source branch to the container&rsquo;s <code>app</code> folder:</p>
+
+<p><code>docker run -ti --rm -p 4000:4000 -v {source_path}:/app benedictchan/octopress2</code></p>
+
+<!-- more -->
+
+
+<h4>Create new post</h4>
+
+<p><code>rake new_post["title"]</code></p>
+
+<h4>Generate the blog</h4>
+
+<p><code>rake generate</code></p>
+
+<h4>Preview the blog</h4>
+
+<p><code>rake preview</code></p>
+
+<h4>Publish the blog</h4>
+
+<p><code>rake deploy</code></p>
+]]></content>
+  </entry>
+  
+</feed>
